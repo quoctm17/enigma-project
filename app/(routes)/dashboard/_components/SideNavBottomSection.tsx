@@ -12,6 +12,8 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from '@/components/ui/input'
+import Constant from '@/app/_constant/Constant'
+import PricingDialog from './PricingDialog'
 
 function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
     const menuList = [
@@ -50,28 +52,30 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
                     <Button className='w-full bg-blue-600 
       hover:bg-blue-700 justify-start mt-3'>New File</Button>
                 </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Create New File</DialogTitle>
-                        <DialogDescription>
-                            <Input placeholder='Enter File Name'
-                                className='mt-3'
-                                onChange={(e) => setFileInput(e.target.value)}
-                            />
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className="">
-                        <DialogClose asChild>
-                            <Button type="button"
-                                className='bg-blue-600 hover:bg-blue-700'
-                                disabled={!(fileInput && fileInput.length > 3)}
-                                onClick={() => onFileCreate(fileInput)}
-                            >
-                                Create
-                            </Button>
-                        </DialogClose>
-                    </DialogFooter>
-                </DialogContent>
+                {totalFiles < Constant.MAX_FREE_FILE ?
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Create New File</DialogTitle>
+                            <DialogDescription>
+                                <Input placeholder='Enter File Name'
+                                    className='mt-3'
+                                    onChange={(e) => setFileInput(e.target.value)}
+                                />
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter className="">
+                            <DialogClose asChild>
+                                <Button type="button"
+                                    className='bg-blue-600 hover:bg-blue-700'
+                                    disabled={!(fileInput && fileInput.length > 3)}
+                                    onClick={() => onFileCreate(fileInput)}
+                                >
+                                    Create
+                                </Button>
+                            </DialogClose>
+                        </DialogFooter>
+                    </DialogContent> :
+                    <PricingDialog />}
             </Dialog>
 
             {/* Progress Bar  */}
@@ -83,7 +87,7 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
             </div>
 
             <h2 className='text-[12px] mt-3'>
-                <strong>{totalFiles}</strong> out of <strong>5</strong> files used</h2>
+                <strong>{totalFiles}</strong> out of <strong>{Constant.MAX_FREE_FILE}</strong> files used</h2>
             <h2 className='text-[12px] mt-1'>Upgrade your plan for unlimited access.</h2>
         </div>
 
