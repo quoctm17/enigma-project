@@ -2,12 +2,23 @@
 import React, { useEffect, useState } from 'react'
 import WorkspaceHeader from '../_components/WorkspaceHeader'
 import Editor from '../_components/Editor'
+import { useConvex } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { FILE } from '../../dashboard/_components/FileList';
 
 function Workspace({ params }: any) {
     const [triggerSave, serTriggerSave] = useState(false);
+    const convex = useConvex();
+    const [fileData, setFileData] = useState<FILE | any>();
     useEffect(() => {
         console.log("FILEID", params.fileId)
+        params.fileId && getFileData();
     }, [])
+
+    const getFileData = async () => {
+        const result = await convex.query(api.files.getFileById, { _id: params.fileId })
+        setFileData(result);
+    }
     return (
         <div>
             <WorkspaceHeader onSave={() => serTriggerSave(!triggerSave)} />
@@ -18,7 +29,9 @@ function Workspace({ params }: any) {
                 {/* Document  */}
                 <div className='h-screen'>
                     <Editor onSaveTrigger={triggerSave}
-                        fileId={params.fileId} />
+                        fileId={params.fileId}
+                        fileData={fileData}
+                    />
                 </div>
                 {/* Whiteboard/canvas */}
                 <div className='bg-red-400 h-screen'>
