@@ -34,7 +34,7 @@ function Dashboard() {
     }
 
     return (
-        <div className='p-8'>
+        <div className='bg-enm-bg p-8 min-h-screen'>
             <Header />
             <FileList />
         </div>
