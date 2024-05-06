@@ -37,28 +37,28 @@ function FileList() {
     return (
         <div className='mt-10'>
             <div className="overflow-x-auto">
-                <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+                <table className="min-w-full divide-y-2 divide-neutral-400 text-sm">
                     <thead className="ltr:text-left rtl:text-right">
                         <tr>
-                            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">File Name</td>
-                            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Created At</td>
-                            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Edited</td>
-                            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Author</td>
+                            <td className="whitespace-nowrap px-4 py-2 font-medium text-enm-main-text">File Name</td>
+                            <td className="whitespace-nowrap px-4 py-2 font-medium text-enm-main-text">Created At</td>
+                            <td className="whitespace-nowrap px-4 py-2 font-medium text-enm-main-text">Edited</td>
+                            <td className="whitespace-nowrap px-4 py-2 font-medium text-enm-main-text">Author</td>
                         </tr>
                     </thead>
 
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody>
                         {fileList && fileList.map((file: FILE, index: number) => (
-                            <tr key={index} className="odd:bg-gray-50 cursor-pointer"
+                            <tr key={index} className="hover:bg-enm-bg-hover cursor-pointer"
                                 onClick={() => router.push('/workspace/' + file._id)}
                             >
-                                <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                <td className="whitespace-nowrap px-4 py-2 font-medium text-enm-main-text">
                                     {file.fileName}</td>
-                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                <td className="whitespace-nowrap px-4 py-2 text-enm-main-text">
                                     {moment(file._creationTime).format('DD MMM YYYY')}</td>
-                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                <td className="whitespace-nowrap px-4 py-2 text-enm-main-text">
                                     {moment(file._creationTime).format('DD MMM YYYY')}</td>
-                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                <td className="whitespace-nowrap px-4 py-2 text-enm-main-text">
                                     <Image src={user?.picture}
                                         alt='user'
                                         width={30}
@@ -66,16 +66,16 @@ function FileList() {
                                         className='rounded-full'
                                     />
                                 </td>
-                                <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                                <td className="whitespace-nowrap px-4 py-2 text-enm-main-text">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger>
                                             <MoreHorizontal />
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent>
+                                        <DropdownMenuContent className='bg-enm-bg-side-nav text-enm-main-text border-none shadow-md shadow-enm-bg'>
                                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem className='gap-3'>
-                                                <Archive className='h-4 w-4' /> Archive</DropdownMenuItem>
+                                                <Archive className='h-4 w-4'/> Archive</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
 

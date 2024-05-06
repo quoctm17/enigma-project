@@ -41,7 +41,7 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
         <div>
             {menuList.map((menu, index) => (
                 <h2 key={index} className='flex gap-2 p-1 px-2 text-[14px] 
-        hover:bg-gray-100 rounded-md cursor-pointer'>
+                hover:bg-enm-bg-hover rounded-md cursor-pointer text-enm-main-text'>
                     <menu.icon className='h-5 w-5' />
                     {menu.name}</h2>
             ))}
@@ -49,8 +49,8 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
             {/* Add New File Button */}
             <Dialog>
                 <DialogTrigger className='w-full' asChild>
-                    <Button className='w-full bg-blue-600 
-      hover:bg-blue-700 justify-start mt-3'>New File</Button>
+                    <Button className='w-full bg-enm-primary
+      hover:bg-sky-600 justify-start mt-3'>New File</Button>
                 </DialogTrigger>
                 {totalFiles < Constant.MAX_FREE_FILE ?
                     <DialogContent>
@@ -66,7 +66,7 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
                         <DialogFooter className="">
                             <DialogClose asChild>
                                 <Button type="button"
-                                    className='bg-blue-600 hover:bg-blue-700'
+                                    className='bg-enm-primary hover:bg-sky-600'
                                     disabled={!(fileInput && fileInput.length > 3)}
                                     onClick={() => onFileCreate(fileInput)}
                                 >
@@ -80,15 +80,17 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
 
             {/* Progress Bar  */}
             <div className='h-4 w-full bg-gray-200 rounded-full mt-5'>
-                <div className={`h-4  bg-blue-600 rounded-full`}
+                <div className={`h-4  bg-enm-primary rounded-full`}
                     style={{ width: `${(totalFiles / 5) * 100}%` }}
                 >
                 </div>
             </div>
 
-            <h2 className='text-[12px] mt-3'>
+            <h2 className='text-[12px] mt-3 text-enm-main-text'>
                 <strong>{totalFiles}</strong> out of <strong>{Constant.MAX_FREE_FILE}</strong> files used</h2>
-            <h2 className='text-[12px] mt-1'>Upgrade your plan for unlimited access.</h2>
+            <h2 className='text-[12px] mt-1 text-enm-main-text'>
+                <span style={{ textDecoration: 'underline' }}>Upgrade</span> your plan for unlimited access.
+            </h2>
         </div>
 
     )

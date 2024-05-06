@@ -47,7 +47,7 @@ function SideNav() {
 
     return (
         <div
-            className=' h-screen
+            className='bg-enm-bg-side-nav h-screen
             fixed w-72 border-r border-[1px] p-6
             flex flex-col'
         >
