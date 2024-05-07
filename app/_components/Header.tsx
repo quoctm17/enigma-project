@@ -14,7 +14,7 @@ function Header() {
                     <nav aria-label="Global" className="hidden md:block">
                         <ul className="flex items-center gap-6 text-sm">
                             <li>
-                                <a className="text-white transition hover:text-gray-100/75" href="#"> About </a>
+                                <a className="text-white transition hover:text-gray-100/75" href='/about'> About </a>
                             </li>
 
                             <li>
