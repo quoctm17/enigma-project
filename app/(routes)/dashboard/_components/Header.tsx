@@ -20,7 +20,7 @@ function Header() {
                 />
             </div>
             <Button className='gap-2 flex
-            h-8 hover:bg-sky-600 bg-enm-primary
+            h-8 bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-500
             '><Send className='h-4 w-4' /> Invite</Button>
         </div>
     )

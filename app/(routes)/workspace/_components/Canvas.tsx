@@ -19,9 +19,9 @@ function Canvas({ onSaveTrigger, fileId, fileData }: { onSaveTrigger: any, fileI
         }).then(resp => console.log(resp))
     }
     return (
-        <div style={{ height: "700px" }}>
+        <div className='h-screen'>
             {fileData && <Excalidraw
-                theme='light'
+                theme='dark'
                 initialData={{
                     elements: fileData?.whiteboard && JSON.parse(fileData?.whiteboard)
                 }}

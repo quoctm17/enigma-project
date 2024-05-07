@@ -5,14 +5,8 @@ import { LoginLink } from '@kinde-oss/kinde-auth-nextjs';
 import Image from 'next/image';
 
 function About() {
-    const [activeButton, setActiveButton] = useState<string>('Document'); // Mặc định active là 'Document'
-
-    const handleButtonClick = (buttonName: string) => {
-        setActiveButton(buttonName);
-    };
-
     return (
-        <div>
+        <div >
             <header className='p-3 border-b flex justify-between items-center bg-enm-bg-side-nav'>
                 <div className='flex gap-2 items-center'>
                     <Image src={'/logo.png'}
@@ -22,39 +16,23 @@ function About() {
                     <h2 className='text-enm-main-text font-bold text-[18px]'>Work at Enigma</h2>
                     <p className='text-enm-secondary-text border-2 border-enm-secondary-text px-2 rounded ml-4'>Read Only</p>
                 </div>
-                <div className="flex gap-1">
-                    <Button
-                        onClick={() => handleButtonClick('Document')}
-                        className={activeButton === 'Document' ? 'bg-enm-primary text-white' : ''}
-                    >
-                        Document
-                    </Button>
-                    <Button
-                        onClick={() => handleButtonClick('Both')}
-                        className={activeButton === 'Both' ? 'bg-enm-primary text-white' : ''}
-                    >
-                        Both
-                    </Button>
-                    <Button
-                        onClick={() => handleButtonClick('Canvas')}
-                        className={activeButton === 'Canvas' ? 'bg-enm-primary text-white' : ''}
-                    >
-                        Canvas
-                    </Button>
-                </div>
+
                 <div>
                     {/* <Button>Signin</Button> */}
                     <a
                         className="block rounded-md px-5 py-2.5 text-sm font-medium 
-                                text-white transition hover:underline"
+                                text-white transition hover:underline bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-500"
                         href="#"
                     >
                         <LoginLink postLoginRedirectURL='/dashboard'>Login</LoginLink>
                     </a>
                 </div>
             </header>
-            {activeButton === 'Document' && (
-                <div className="w-1/2 mt-8 mb-8 mx-auto">
+
+
+            {/* Content */}
+            <div className='grid grid-cols-1 bg-enm-bg'>
+                <div className="w-2/3 mt-8 mb-8 mx-auto p-10 border-2 rounded-sm bg-enm-main-text text-enm-bg">
                     <h2 className="text-3xl font-bold mb-5">Work at Enigma</h2>
                     <h2 className="text-2xl font-bold mb-5">What we do</h2>
                     <p className="mb-5">
@@ -78,7 +56,9 @@ function About() {
                     <h2 className="text-2xl font-bold mt-4 mb-5">Open roles</h2>
                     <p >No open roles currently</p>
                 </div>
-            )}
+
+            </div>
+
         </div>
     );
 }

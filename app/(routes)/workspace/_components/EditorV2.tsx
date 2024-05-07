@@ -92,7 +92,7 @@ function EditorV2({ onSaveTrigger, fileId, fileData }: { onSaveTrigger: any; fil
     }
 
     // Renders the editor instance using a React component.
-    return <BlockNoteView editor={editor} theme={'light'} />;
+    return <BlockNoteView editor={editor} theme={'dark'} />;
 }
 
 export default EditorV2;

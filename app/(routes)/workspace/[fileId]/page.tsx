@@ -31,7 +31,7 @@ function Workspace({ params }: any) {
             md:grid-cols-2"
             >
                 {/* Document  */}
-                <div className="h-screen">
+                <div className="h-screen text-enm-main-text bg-enm-bg">
                     {/* <Editor onSaveTrigger={triggerSave}
                         fileId={params.fileId}
                         fileData={fileData}
