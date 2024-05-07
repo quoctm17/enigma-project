@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@blocknote/core": "^0.13.0",
+    "@blocknote/mantine": "^0.13.1",
+    "@blocknote/react": "^0.13.1",
+    "@blocknote/shadcn": "^0.13.1",
     "@editorjs/checklist": "^1.6.0",
     "@editorjs/editorjs": "^2.29.1",
     "@editorjs/header": "^2.8.1",
@@ -33,7 +37,8 @@
     "react-dom": "^18",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "y-webrtc": "^10.3.0"
   },
   "devDependencies": {
     "@types/node": "^20",
