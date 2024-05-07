@@ -14,15 +14,16 @@ function WorkspaceHeader({ onSave }: any) {
                 <h2 className='text-enm-main-text'>File Name</h2>
             </div>
             <div className='flex items-center gap-4'>
-                <Button className='h-8 text-[12px]
-            gap-2 bg-pink-400 hover:bg-pink-500'
-                    onClick={() => onSave()}
-                >
-                    Save <Save className='h-4 w-4' /></Button>
-                <Button className='h-8 text-[12px]
-            gap-2 bg-enm-primary hover:bg-sky-600'>
-                    Share <Link className='h-4 w-4' /></Button>
-            </div>
+    <Button className='h-8 text-[12px] gap-2 bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-500'
+            onClick={() => onSave()}
+        >
+            Save <Save className='h-4 w-4' />
+    </Button>
+    <Button className='h-8 text-[12px] gap-2 bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-500'>
+        Share <Link className='h-4 w-4' />
+    </Button>
+</div>
+
         </div>
     )
 }
