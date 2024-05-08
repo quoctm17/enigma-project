@@ -20,7 +20,6 @@ function Hero() {
             </svg>
             <div style={{ top: '60%', height: '40%', background: 'linear-gradient(to bottom, #8CBAFF 0%, #579BFF 10%, #6A1339 70%, #8E1A4C 80%, #EC2B7E 100%)' }}></div>
           </div> */}
-          <Image src='/branch.png' alt='branch' width={200} height={200} />
 
           <h1 className="text-6xl text-white font-extrabold sm:text-6xl">
             From Thoughts to Talks

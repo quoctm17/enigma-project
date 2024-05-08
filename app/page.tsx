@@ -6,6 +6,16 @@ import Hero from './_components/Hero';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { useEffect } from 'react';
 import Productivity from './_components/Productivity';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+
 
 export default function Home() {
     const { user } = useKindeBrowserClient();
