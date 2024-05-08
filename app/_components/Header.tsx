@@ -1,10 +1,11 @@
 import { LoginLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs'
+import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
 function Header() {
     return (
-        <header className="bg-black">
+        <header className="absolute top-0 left-0 w-full text-white">
             <div className="mx-auto flex h-16 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
                 <Image src='/logo.png' alt='logo'
                     width={50}
@@ -13,28 +14,21 @@ function Header() {
                 <div className="flex flex-1 items-center justify-end md:justify-between">
                     <nav aria-label="Global" className="hidden md:block">
                         <ul className="flex items-center gap-6 text-sm">
+
+                            <li>
+                                <a className="text-white transition hover:text-gray-100/75" href="#"> Use Cases </a>
+                            </li>
+
                             <li>
                                 <a className="text-white transition hover:text-gray-100/75" href='/about'> About </a>
                             </li>
 
                             <li>
-                                <a className="text-white transition hover:text-gray-100/75" href="#"> Careers </a>
+                                <a className="text-white transition hover:text-gray-100/75" href="#"> Pricing </a>
                             </li>
 
                             <li>
-                                <a className="text-white transition hover:text-gray-100/75" href="#"> History </a>
-                            </li>
-
-                            <li>
-                                <a className="text-white transition hover:text-gray-100/75" href="#"> Services </a>
-                            </li>
-
-                            <li>
-                                <a className="text-white transition hover:text-gray-100/75" href="#"> Projects </a>
-                            </li>
-
-                            <li>
-                                <a className="text-white transition hover:text-gray-100/75" href="#"> Blog </a>
+                                <a className="text-white transition hover:text-gray-100/75" href="#"> Resources </a>
                             </li>
                         </ul>
                     </nav>
@@ -51,12 +45,12 @@ function Header() {
 
                             <a
                                 className="hidden rounded-md bg-gray-100 
-                                px-5 py-2.5 text-sm font-medium
+                                px-4 py-2.5 text-sm font-medium
                                 text-black transition
                                 hover:text-slate-200 sm:block"
                                 href="#"
                             >
-                                <RegisterLink>Register</RegisterLink>
+                                <RegisterLink className='flex items-center'>Register <ArrowRight className='ml-3' /></RegisterLink>
                             </a>
                         </div>
 

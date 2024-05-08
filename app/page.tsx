@@ -5,6 +5,7 @@ import Header from './_components/Header';
 import Hero from './_components/Hero';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { useEffect } from 'react';
+import Productivity from './_components/Productivity';
 
 export default function Home() {
     const { user } = useKindeBrowserClient();
@@ -17,6 +18,7 @@ export default function Home() {
         <div>
             <Header></Header>
             <Hero></Hero>
+            <Productivity></Productivity>
         </div>
     );
 }
