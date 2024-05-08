@@ -5,7 +5,7 @@ import React from 'react'
 
 function Header() {
     return (
-        <header className="absolute top-0 left-0 w-full text-white">
+        <header className="absolute top-0 left-0 w-full text-white z-50">
             <div className="mx-auto flex h-16 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
                 <Image src='/logo.png' alt='logo'
                     width={50}
