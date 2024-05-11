@@ -1,7 +1,10 @@
 'use client';
-import Header from '@/app/_components/Header';
+import { useRouter, usePathname } from 'next/navigation';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import React from 'react';
+import { twMerge } from 'tailwind-merge';
+import { toast } from 'sonner';
 import {
     CircleCheck,
     MoveRight,
@@ -24,23 +27,142 @@ import {
     Star,
 } from 'lucide-react';
 
-export default function Pricing() {
+import Header from '@/app/_components/Header';
+import { createPaymentLink } from './_actions';
+
+export default function Pricing({ searchParams }: any) {
+    const { user } = useKindeBrowserClient();
+
+    const pathname = usePathname();
+    const router = useRouter();
+
+    const [redirectLoading, setRedirectLoading] = useState(false);
+
+    // /pricing?code=00&id=4edcf8143dff44ef9d315f77d6e89ae4&cancel=true&status=CANCELLED&orderCode=656551
+    const RETURN_URL = `${process.env.NEXT_PUBLIC_ENM_CLIENT_URL}${pathname}` || '';
+    const CANCEL_URL = `${process.env.NEXT_PUBLIC_ENM_CLIENT_URL}${pathname}` || '';
+
+    const { type = 'monthly', code, id, cancel, status, orderCode } = searchParams;
+
+    useEffect(() => {
+        if (cancel === 'true' && status === 'CANCELLED') {
+            setTimeout(() => toast.error('Payment Cancelled'));
+        } else if (cancel === 'false') {
+            switch (status) {
+                case 'PAID':
+                    // TODO: change user subscription
+                    setTimeout(() => toast.success('Payment Successful'));
+                    break;
+                case 'PENDING':
+                    break;
+                case 'PROCESSING':
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, []);
+
+    // Get a new searchParams string by merging the current
+    // searchParams with a provided key/value pair
+    const createQueryString = useCallback(
+        (name: string, value: string) => {
+            // const params = new URLSearchParams(searchParams.toString());
+            const params = new URLSearchParams();
+            params.set(name, value);
+
+            return params.toString();
+        },
+        [searchParams],
+    );
+
+    const handleClickStart = () => {
+        // TODO: check user login
+        if (!user) router.push('/login');
+        // TODO: check user current subscription
+
+        // create link
+        createPaymentLinkHandle(redirectPaymentLink, setRedirectLoading);
+    };
+
+    const createPaymentLinkHandle = async function (callbackFunction: (data: any) => void, setLoading: any) {
+        setLoading(true);
+        try {
+            const body = {
+                description: `Professional Plan`, //max 25 chars
+                amount: 5000, //TODO: get package price
+                returnUrl: RETURN_URL,
+                cancelUrl: CANCEL_URL,
+            };
+            let response = await createPaymentLink(body);
+            if (response.error != 0) throw new Error('Call Api failed: ');
+            callbackFunction(response.data);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+            toast.error('Error occur, please try again!');
+        }
+    };
+
+    const redirectPaymentLink = async function (checkoutResponse: any) {
+        if (checkoutResponse) {
+            let url = checkoutResponse.checkoutUrl;
+            // if (checkoutResponse.checkoutUrl.startsWith('https://dev.pay.payos.vn')) {
+            //     url = checkoutResponse.checkoutUrl.replace('https://dev.pay.payos.vn', 'https://next.dev.pay.payos.vn');
+            // }
+
+            // if (checkoutResponse.checkoutUrl.startsWith('https://pay.payos.vn')) {
+            //     url = checkoutResponse.checkoutUrl.replace('https://pay.payos.vn', 'https://next.pay.payos.vn');
+            // }
+
+            // redirect to url with nextjs
+            router.push(url);
+        }
+    };
+
     return (
         <div className="w-full bg-enm-bg">
             <Header />
-            <div className="mx-auto max-w-screen-xl text-enm-main-text pb-16">
-                <main className="flex gap-8 w-full h-[640px] pt-16">
+            <div className="mx-auto max-w-screen-xl text-enm-main-text py-16">
+                <main className="flex gap-8 w-full min-h-[640px] pt-16">
                     <div className="flex-[4]">
                         <h1 className="text-[80px] leading-[1.15] font-bold">Pricing Plan</h1>
                         <p className="text-lg text-enm-secondary-text text-balance">
                             Choose a pricing plan that suits you and your team the best.
                         </p>
                         <div className="mt-8 p-2 bg-white rounded-full flex flex-row">
-                            <Button className="flex-1 py-6 rounded-full text-lg bg-enm-primary ">Monthly</Button>
-                            <Button className="flex-1 py-6 rounded-full text-lg bg-transparent text-black ">
+                            <Button
+                                onClick={() => {
+                                    router.push(pathname + '?' + createQueryString('type', 'monthly'));
+                                }}
+                                className={twMerge(
+                                    'flex-1 py-6 rounded-full text-lg bg-transparent hover:bg-enm-primary/50 text-black',
+                                    type === 'monthly' && 'bg-enm-primary text-white',
+                                )}
+                            >
+                                Monthly
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    router.push(pathname + '?' + createQueryString('type', 'semiannually'));
+                                }}
+                                className={twMerge(
+                                    'flex-1 py-6 rounded-full text-lg bg-transparent hover:bg-enm-primary/50 text-black',
+                                    type === 'semiannually' && 'bg-enm-primary text-white',
+                                )}
+                            >
                                 Semiannually
                             </Button>
-                            <Button className="flex-1 py-6 rounded-full text-lg bg-transparent text-black ">
+                            <Button
+                                onClick={() => {
+                                    router.push(pathname + '?' + createQueryString('type', 'yearly'));
+                                }}
+                                className={twMerge(
+                                    'flex-1 py-6 rounded-full text-lg bg-transparent hover:bg-enm-primary/50 text-black',
+                                    type === 'yearly' && 'bg-enm-primary text-white',
+                                )}
+                            >
                                 Yearly
                             </Button>
                         </div>
@@ -83,8 +205,8 @@ export default function Pricing() {
                                 </li>
                             </ul>
                         </div>
-                        <div className="relative flex-1 rounded-t-none rounded-2xl bg-enm-neutral p-6 height-[100%] border border-enm-primary border-2">
-                            <p className="rounded-t-2xl border border-enm-primary border-2 absolute translate-y-[-100%] top-0 right-[-2px] left-[-2px] text-center bg-enm-primary text-white">
+                        <div className="relative flex-1 rounded-t-none rounded-2xl bg-enm-neutral p-6 height-[100%] border-enm-primary border-2">
+                            <p className="rounded-t-2xl border-enm-primary border-2 absolute translate-y-[-100%] top-0 right-[-2px] left-[-2px] text-center bg-enm-primary text-white">
                                 Most popular ✨
                             </p>
                             <h2 className="text-4xl font-semibold">Professional</h2>
@@ -92,7 +214,10 @@ export default function Pricing() {
                                 <span className="text-4xl font-semibold">$6.59</span>
                                 <span className="text-enm-secondary-text ml-2">/month</span>
                             </div>
-                            <Button className="my-8 hover:bg-enm-primary/90 bg-enm-primary w-full py-6 text-lg">
+                            <Button
+                                onClick={handleClickStart}
+                                className="my-8 hover:bg-enm-primary/90 bg-enm-primary w-full py-6 text-lg"
+                            >
                                 Get started
                                 <MoveRight className="ml-4" />
                             </Button>
@@ -173,7 +298,7 @@ export default function Pricing() {
 
                 <div>
                     {data.map((section, index) => (
-                        <section className="mt-20">
+                        <section key={index} className="mt-20">
                             <div className="flex px-6 mb-4">
                                 <h3 className="flex-1 text-2xl font-semibold">{section.category}</h3>
                                 {index === 0 && (
@@ -186,7 +311,7 @@ export default function Pricing() {
                             </div>
                             {section.features.map((feature, index) => {
                                 const bgColor = index % 2 === 0 ? 'bg-enm-neutral' : 'bg-enm-bg';
-                                const { title, content, icon, subTitle } = feature;
+                                const { title, content, icon, subTitle } = feature as any;
 
                                 const getContent = (content: any) => {
                                     if (content === true) return <CircleCheck />;
@@ -194,11 +319,11 @@ export default function Pricing() {
                                 };
 
                                 return (
-                                    <div className={`flex p-6 rounded-xl ${bgColor}`}>
+                                    <div key={index} className={`flex p-6 rounded-xl ${bgColor}`}>
                                         <div className="flex-1 flex items-start gap-2">
                                             <span>{icon}</span>
                                             <div>
-                                                <h4 className="font-semibold">{feature.title}</h4>
+                                                <h4 className="font-semibold">{title}</h4>
                                                 {subTitle && (
                                                     <p className="text-enm-secondary-text text-balance text-base">
                                                         {subTitle}
