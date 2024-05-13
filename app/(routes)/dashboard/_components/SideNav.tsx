@@ -57,7 +57,7 @@ function SideNav() {
     return (
         <div
             className='bg-enm-bg-side-nav h-screen
-            fixed w-72 border-r border-[1px] p-6
+            fixed w-72 p-6
             flex flex-col'
         >
             <div className='flex-1'>

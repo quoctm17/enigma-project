@@ -49,12 +49,18 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
             {/* Add New File Button */}
             <Dialog>
                 <DialogTrigger className='w-full' asChild>
-                    <Button className='w-full bg-enm-primary
-      hover:bg-sky-600 justify-start mt-3'>New File</Button>
+                    {/* <Button className='w-full bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-600 justify-start mt-3'>
+                        New File
+                    </Button> */}
+                    <div className="w-full rounded-md bg-gradient-to-r from-pink-500 to-enm-primary p-1 mt-4 cursor-pointer">
+                        <div className="flex h-full w-full bg-enm-bg-side-nav back">
+                            <h1 className="text-[16px] font-bold bg-gradient-to-r from-pink-400 via-sky-400 to-sky-400 inline-block text-transparent bg-clip-text ml-4 py-2">Create New File</h1>
+                        </div>
+                    </div>
                 </DialogTrigger>
                 {totalFiles < Constant.MAX_FREE_FILE ?
-                    <DialogContent>
-                        <DialogHeader>
+                    <DialogContent className='bg-enm-bg-side-nav border-none text-enm-main-text'>
+                        <DialogHeader >
                             <DialogTitle>Create New File</DialogTitle>
                             <DialogDescription>
                                 <Input placeholder='Enter File Name'
@@ -66,7 +72,7 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
                         <DialogFooter className="">
                             <DialogClose asChild>
                                 <Button type="button"
-                                    className='bg-enm-primary hover:bg-sky-600'
+                                    className='bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-600'
                                     disabled={!(fileInput && fileInput.length > 3)}
                                     onClick={() => onFileCreate(fileInput)}
                                 >

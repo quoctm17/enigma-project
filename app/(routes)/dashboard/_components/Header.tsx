@@ -51,7 +51,7 @@ function Header() {
     return (
         <div className='flex justify-end w-full gap-2 items-center'>
             <div className='flex gap-2 items-center border rounded-md p-1 '>
-                <Search color='white' className='h-4 w-4 ' />
+                <Search color='white' className='h-4 w-4'/>
                 <input className='bg-transparent text-enm-main-text focus:outline-none' type='text' placeholder='Search for...' />
             </div>
             <div>
@@ -59,7 +59,7 @@ function Header() {
             </div>
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button className='gap-2 flex h-8 bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-500'>
+                    <Button className='gap-2 flex h-8 bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-600'>
                         <Send className='h-4 w-4' /> Invite
                     </Button>
                 </DialogTrigger>
