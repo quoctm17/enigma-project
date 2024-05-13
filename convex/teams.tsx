@@ -7,18 +7,44 @@ export const getTeam = query({
     },
 
     handler: async (ctx, args) => {
-        const result = await ctx.db.query('teams')
-            .filter((q) => q.eq(q.field('createBy'), args.email))
-            .collect();
-
+        const allTeams = await ctx.db.query('teams').collect();
+        const result = allTeams.filter(team => team.members.includes(args.email));
         return result;
+
     },
 })
 
 export const createTeam = mutation({
     args: { teamName: v.string(), createBy: v.string() },
     handler: async (ctx, args) => {
-        const result = await ctx.db.insert('teams', args);
+        const result = await ctx.db.insert('teams', {
+            teamName: args.teamName,
+            createBy: args.createBy,
+            members: [args.createBy]
+        });
         return result;
     },
 })
+
+export const inviteUser = mutation({
+    args: {
+        teamId: v.id("teams"),
+        email: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const team = await ctx.db.get(args.teamId);
+        if (!team) {
+            throw new Error("Team not found");
+        }
+
+        if (team.members.includes(args.email)) {
+            throw new Error("User is already a member of the team");
+        }
+
+        await ctx.db.patch(args.teamId, {
+            members: [...team.members, args.email],
+        });
+
+        return { success: true };
+    },
+});

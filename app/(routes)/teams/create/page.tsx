@@ -15,18 +15,28 @@ function CreatTeam() {
     const createTeam = useMutation(api.teams.createTeam);
     const { user }: any = useKindeBrowserClient();
     const router = useRouter();
-    const createNewTeam = () => {
-        createTeam({
-            teamName: teamName,
-            createBy: user?.email
-        }).then(resp => {
-            console.log(resp);
-            if (resp) {
-                router.push('/dashboard')
-                toast('Team created successfully!!!')
+    const createNewTeam = async () => {
+        if (!user?.email) {
+            toast.error('User not logged in');
+            return;
+        }
+        try {
+            console.log('Creating team with:', { teamName, createBy: user.email });
+            const response = await createTeam({
+                teamName: teamName,
+                createBy: user.email
+            });
+            console.log('Team created:', response);
+            if (response) {
+                toast.success('Team created successfully!!!');
+                router.push('/dashboard');
             }
-        })
+        } catch (error) {
+            console.error('Error creating team:', error);
+            toast.error('Failed to create team');
+        }
     }
+
     return (
         <div className='px-6 md:px-16 py-16 min-h-screen bg-enm-bg'>
             <Image src='/logo.png'
