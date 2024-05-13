@@ -83,8 +83,8 @@ function SideNavTopSection({ user, setActiveTeamInfo }: any) {
                             <h2 key={index}
                                 className={`p-2 hover:bg-sky-600 
                             hover:text-enm-main-text
-                            rounded-lg mb-1 cursor-pointer
-                            ${activeTeam?._id == team._id && 'bg-enm-primary text-enm-main-text'}`}
+                            rounded-lg mb-1
+                            ${activeTeam?._id == team._id && 'bg-gradient-to-r from-pink-500 to-enm-primary text-enm-main-text'}`}
                                 onClick={() => setActiveTeam(team)}
                             >{team.teamName}</h2>
                         ))}

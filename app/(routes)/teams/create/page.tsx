@@ -44,16 +44,16 @@ function CreatTeam() {
                 width={50}
                 height={50} />
             <div className='flex flex-col items-center mt-8'>
-                <h2 className='font-bold text-[40px] py-3 text-enm-main-text'>What should we call your team?</h2>
-                <h2 className='text-enm-secondary-text'>You can always change this later from settings</h2>
-                <div className='mt-7 w-[40%]'>
-                    <label className='text-enm-secondary-text'>Team Name</label>
+                <h2 className='font-bold text-[50px] py-3 text-enm-main-text'>What should we call your team?</h2>
+                <h2 className='text-enm-secondary-text text-2xl'>You can always change this later from settings</h2>
+                <div className='mt-10 w-[40%]'>
+                    <label className='text-enm-secondary-text text-lg'>Team Name</label>
                     <Input placeholder='Team name'
-                        className='mt-3'
+                        className='mt-3 '
                         onChange={(e) => setTeamName(e.target.value)}
                     />
                 </div>
-                <Button className='bg-enm-primary mt-10 w-[30%] hover:bg-sky-600'
+                <Button className='text-[18px] bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-600 mt-10 w-[30%]'         
                     disabled={!(teamName && teamName?.length > 0)}
                     onClick={() => createNewTeam()}
                 >Create Team</Button>

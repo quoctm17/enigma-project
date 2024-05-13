@@ -40,23 +40,21 @@ function Header() {
 
                     <div className="flex items-center gap-4">
                         <div className="sm:flex sm:gap-4">
-                            <a
+                            <span
                                 className="block rounded-md px-5 py-2.5 text-sm font-medium 
                                 text-white transition"
-                                href="#"
                             >
                                 <LoginLink postLoginRedirectURL='/dashboard'>Login</LoginLink>
-                            </a>
+                            </span>
 
-                            <a
+                            <span
                                 className="hidden rounded-md bg-gray-100 
                                 px-4 py-2.5 text-sm font-medium
                                 text-black transition
                                 hover:text-slate-200 sm:block"
-                                href="#"
                             >
                                 <RegisterLink className='flex items-center'>Register <ArrowRight className='ml-3' /></RegisterLink>
-                            </a>
+                            </span>
                         </div>
 
                         <button
