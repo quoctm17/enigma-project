@@ -6,8 +6,6 @@ import '@blocknote/shadcn/style.css';
 import { useMutation } from 'convex/react';
 import { PartialBlock, BlockNoteEditor } from '@blocknote/core';
 import { toast } from 'sonner';
-import * as Y from 'yjs';
-import { WebrtcProvider } from 'y-webrtc';
 
 import { api } from '@/convex/_generated/api';
 import { FILE } from '../../dashboard/_components/FileList';
@@ -26,11 +24,22 @@ const rawDocument = [
     },
 ] as PartialBlock[];
 
-const doc = new Y.Doc();
-
-function EditorV2({ onSaveTrigger, fileId, fileData }: { onSaveTrigger: any; fileId: any; fileData: FILE }) {
+function EditorV2({
+    onSaveTrigger,
+    fileId,
+    fileData,
+    provider,
+    doc,
+    userMetaData,
+}: {
+    onSaveTrigger: any;
+    fileId: any;
+    fileData: FILE;
+    provider: any;
+    doc: any;
+    userMetaData: any;
+}) {
     const updateDocument = useMutation(api.files.updateDocument);
-    const provider = useMemo(() => new WebrtcProvider(fileId, doc), []);
 
     const [initialContent, setInitialContent] = useState<PartialBlock[] | undefined | 'loading'>('loading');
 
@@ -62,11 +71,7 @@ function EditorV2({ onSaveTrigger, fileId, fileData }: { onSaveTrigger: any; fil
                 fragment: doc.getXmlFragment('document-store'),
                 // TODO: get real user information
                 // Information (name and color) for this user:
-                user: {
-                    // get random name and random color
-                    name: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
-                    color: '#' + Math.floor(Math.random() * 16777215).toString(16),
-                },
+                user: userMetaData,
             },
         });
     }, [initialContent]);
