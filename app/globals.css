@@ -99,3 +99,15 @@ h6.ce-header {
     @apply bg-background text-foreground;
   }
 }
+
+.header-bg {
+  transition: background-color 0.5s ease, opacity 0.5s ease;
+}
+
+.bg-opacity-50 {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bg-opacity-100 {
+  background-color: rgba(0, 0, 0, 1);
+}

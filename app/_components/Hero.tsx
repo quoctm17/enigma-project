@@ -11,15 +11,6 @@ function Hero() {
 
       <div className="container h-screen max-w-screen-xl py-12 lg:flex lg:items-center">
         <div className="relative mt-50 max-w-4xl text-left pl-10">
-          {/* Adjusted Gradient Line
-          <div className="absolute left-0 top-0 bottom-0 w-1">
-            <div style={{ height: '60%', background: 'linear-gradient(to bottom, #8CBAFF 0%, #579BFF 25%, #022C6B 50%, #023A8C 75%, #023A8C 100%)' }}></div>
-            Icon
-            <svg className="relative" style={{ top: '60%', height: '30px', width: '2px', fill: '#FFF', transform: 'translateY(-50%)' }} viewBox="0 0 24 24">
-              <Code />
-            </svg>
-            <div style={{ top: '60%', height: '40%', background: 'linear-gradient(to bottom, #8CBAFF 0%, #579BFF 10%, #6A1339 70%, #8E1A4C 80%, #EC2B7E 100%)' }}></div>
-          </div> */}
 
           <h1 className="text-6xl text-white font-extrabold sm:text-6xl">
             From Thoughts to Talks
