@@ -1,24 +1,23 @@
-import { ChevronDown, LayoutGrid, LogOut, Settings, Users } from 'lucide-react'
-import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs'
-import { Separator } from '@/components/ui/separator'
-import { useConvex } from 'convex/react'
-import { api } from '@/convex/_generated/api'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+// app/(routes)/dashboard/_components/SideNavTopSection.tsx
+import { ChevronDown, LayoutGrid, LogOut, Settings, Users } from 'lucide-react';
+import Image from 'next/image';
+import React, { useEffect, useState, useContext } from 'react';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs';
+import { Separator } from '@/components/ui/separator';
+import { useConvex } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { FileListContext } from '@/app/_context/FilesListContext';
 
 export interface TEAM {
-    createBy: String,
-    teamName: String,
-    _id: String
+    createBy: string,
+    teamName: string,
+    _id: string
 }
-function SideNavTopSection({ user, setActiveTeamInfo }: any) {
+
+function SideNavTopSection({ user }: any) {
     const menu = [
         {
             id: 1,
@@ -35,43 +34,36 @@ function SideNavTopSection({ user, setActiveTeamInfo }: any) {
     ];
     const router = useRouter();
     const convex = useConvex();
-    const [activeTeam, setActiveTeam] = useState<TEAM>();
+    const { activeTeam, setActiveTeam } = useContext(FileListContext);
     const [teamList, setTeamList] = useState<TEAM[]>();
+
     useEffect(() => {
         user && getTeamList();
-    }, [user])
-
-    useEffect(() => {
-        activeTeam ? setActiveTeamInfo(activeTeam) : null
-    }, [activeTeam])
+    }, [user]);
 
     const getTeamList = async () => {
-        const result = await convex.query(api.teams.getTeam, { email: user?.email })
+        const result = await convex.query(api.teams.getTeam, { email: user?.email });
         console.log("TeamList", result);
         setTeamList(result);
-        setActiveTeam(result[0]);
-    }
+        if (result.length > 0) {
+            setActiveTeam(result[0]); // Cập nhật thông tin team ngay lập tức
+        }
+    };
 
     const onMenuClick = (item: any) => {
         if (item.path) {
             router.push(item.path);
         }
-    }
+    };
+
     return (
         <div>
             <Popover>
                 <PopoverTrigger>
-                    <div className='flex iteams-center gap-3
-             p-3 rounded-md
-            cursor-pointer
-            '>
-                        <Image src='/logo.png' alt='logo'
-                            width={50}
-                            height={50} />
-                        <h2 className='text-enm-main-text flex gap-2 
-                    items-center
-                font-bold text-[17px]
-                '>{activeTeam?.teamName}
+                    <div className='flex items-center gap-3 p-3 rounded-md cursor-pointer'>
+                        <Image src='/logo.png' alt='logo' width={50} height={50} />
+                        <h2 className='text-enm-main-text flex gap-2 items-center font-bold text-[17px]'>
+                            {activeTeam?.teamName}
                             <ChevronDown />
                         </h2>
                     </div>
@@ -81,58 +73,49 @@ function SideNavTopSection({ user, setActiveTeamInfo }: any) {
                     <div>
                         {teamList?.map((team, index) => (
                             <h2 key={index}
-                                className={`p-2 hover:bg-sky-600 
-                            hover:text-enm-main-text
-                            rounded-lg mb-1
-                            ${activeTeam?._id == team._id && 'bg-gradient-to-r from-pink-500 to-enm-primary text-enm-main-text'}`}
+                                className={`p-2 hover:bg-sky-600 hover:text-enm-main-text rounded-lg mb-1 ${activeTeam?._id == team._id && 'bg-gradient-to-r from-pink-500 to-enm-primary text-enm-main-text'}`}
                                 onClick={() => setActiveTeam(team)}
-                            >{team.teamName}</h2>
+                            >
+                                {team.teamName}
+                            </h2>
                         ))}
                     </div>
                     <Separator className='mt-2 bg-slate-100' />
                     {/* Option Section */}
                     <div>
                         {menu.map((item, index) => (
-                            <h2 key={index} className='flex gap-2 items-center
-                        p-2 hover:bg-enm-bg-hover rounded-lg cursor-pointer text-sm'
+                            <h2 key={index} className='flex gap-2 items-center p-2 hover:bg-enm-bg-hover rounded-lg cursor-pointer text-sm'
                                 onClick={() => onMenuClick(item)}>
                                 <item.icon className='h-4 w-4' />
-                                {item.name}</h2>
+                                {item.name}
+                            </h2>
                         ))}
                         <LogoutLink>
-                            <h2 className='flex gap-2 items-center
-                        p-2 hover:bg-enm-bg-hover rounded-lg cursor-pointer text-sm'>
+                            <h2 className='flex gap-2 items-center p-2 hover:bg-enm-bg-hover rounded-lg cursor-pointer text-sm'>
                                 <LogOut className='h-4 w-4' />
-                                Logout</h2>
+                                Logout
+                            </h2>
                         </LogoutLink>
-
                     </div>
                     <Separator className='mt-2 bg-slate-100' />
                     {/* User Info Section */}
                     {user && <div className='mt-2 flex gap-2 items-center'>
-                        <Image src={user?.picture} alt='user'
-                            width={30}
-                            height={30}
-                            className='rounded-full'
-                        />
+                        <Image src={user?.picture} alt='user' width={30} height={30} className='rounded-full' />
                         <div>
                             <h2 className='text-[14px] font-bold'>{user?.given_name} {user?.family_name}</h2>
                             <h2 className='text-[12px] text-gray-500'>{user?.email}</h2>
-
                         </div>
                     </div>}
                 </PopoverContent>
             </Popover>
 
             {/* All File Button */}
-            <Button 
-                className='w-full justify-start
-          gap-2 font-bold mt-8 hover:border-2 hover:border-gray-400'>
+            <Button className='w-full justify-start gap-2 font-bold mt-8 hover:border-2 hover:border-gray-400'>
                 <LayoutGrid className='h-5 w-5' />
-                All Files</Button>
+                All Files
+            </Button>
         </div>
-
-    )
+    );
 }
 
-export default SideNavTopSection
+export default SideNavTopSection;

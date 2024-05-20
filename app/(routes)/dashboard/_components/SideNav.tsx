@@ -1,78 +1,63 @@
-import Image from 'next/image'
-import React, { useContext, useEffect, useState } from 'react'
-import SideNavTopSection, { TEAM } from './SideNavTopSection'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
-import SideNavBottomSection from './SideNavBottomSection'
-import { api } from '@/convex/_generated/api'
-import { useConvex, useMutation, useQuery } from 'convex/react'
-import { toast } from 'sonner'
-import { FileListContext } from '@/app/_context/FilesListContext'
+// app/(routes)/dashboard/_components/SideNav.tsx
+import React, { useContext, useEffect, useState } from 'react';
+import SideNavTopSection, { TEAM } from './SideNavTopSection';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import SideNavBottomSection from './SideNavBottomSection';
+import { api } from '@/convex/_generated/api';
+import { useConvex, useQuery } from 'convex/react';
+import { toast } from 'sonner';
+import { FileListContext } from '@/app/_context/FilesListContext';
 
 function SideNav() {
     const { user }: any = useKindeBrowserClient();
-    const createFile = useMutation(api.files.createFile);
-    const [activeTeam, setActiveTeam] = useState<TEAM | any>();
     const convex = useConvex();
-    const [totalFiles, setTotalFiles] = useState<Number>();
-    const { fileList_, setFileList_ } = useContext(FileListContext);
+    const { fileList_, setFileList_, activeTeam, setActiveTeam } = useContext(FileListContext);
     const teamList = useQuery(api.teams.getTeam, { email: user?.email });
 
     useEffect(() => {
-        if (teamList) {
+        if (teamList && teamList.length > 0) {
             setActiveTeam(teamList[0]);
         }
     }, [teamList]);
 
     useEffect(() => {
-        activeTeam && getFiles();
-    }, [activeTeam])
-
-    const onFileCreate = (fileName: string) => {
-        console.log(fileName)
-        createFile({
-            fileName: fileName,
-            teamId: activeTeam?._id,
-            createdBy: user?.email,
-            archive: false,
-            document: '',
-            whiteboard: ''
-        }).then(resp => {
-            if (resp) {
-                getFiles();
-                toast('File created successfully!')
-            }
-        }, (e) => {
-            toast('Error while creating file')
-
-        })
-    }
+        if (activeTeam) {
+            getFiles();
+        }
+    }, [activeTeam]);
 
     const getFiles = async () => {
+        if (!activeTeam) return;
         const result = await convex.query(api.files.getFiles, { teamId: activeTeam._id });
         console.log(result);
         setFileList_(result);
-        setTotalFiles(result?.length)
-    }
+    };
 
     return (
-        <div
-            className='bg-enm-bg-side-nav h-screen
-            fixed w-72 p-6
-            flex flex-col'
-        >
+        <div className='bg-enm-bg-side-nav h-screen fixed w-72 p-6 flex flex-col'>
             <div className='flex-1'>
-                <SideNavTopSection user={user}
-                    setActiveTeamInfo={(activeTeam: TEAM) => setActiveTeam(activeTeam)} />
+                <SideNavTopSection user={user} setActiveTeamInfo={setActiveTeam} />
             </div>
-
             <div>
-                <SideNavBottomSection
-                    totalFiles={totalFiles}
-                    onFileCreate={onFileCreate}
-                />
+                <SideNavBottomSection totalFiles={fileList_?.length} onFileCreate={async (fileName: string) => {
+                    const result = await convex.mutation(api.files.createFile, {
+                        fileName,
+                        teamId: activeTeam?._id,
+                        createdBy: user?.email,
+                        archive: false,
+                        document: '',
+                        whiteboard: ''
+                    });
+                    if (result) {
+                        getFiles();
+                        toast('File created successfully!');
+                    } else {
+                        toast('Error while creating file');
+                    }
+                }} />
             </div>
         </div>
-    )
+    );
 }
 
-export default SideNav
+export default SideNav;
