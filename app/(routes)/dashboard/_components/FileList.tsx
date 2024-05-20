@@ -1,9 +1,9 @@
-import { FileListContext } from '@/app/_context/FilesListContext'
+import { FileListContext } from '@/app/_context/FilesListContext';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { Archive, MoreHorizontal } from 'lucide-react';
 import moment from 'moment';
 import Image from 'next/image';
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,12 +11,12 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { useRouter } from 'next/navigation';
 
 export interface FILE {
     archive: boolean,
-    createdBt: string,
+    createdBy: string,
     document: string,
     fileName: string,
     teamId: string,
@@ -24,16 +24,20 @@ export interface FILE {
     _id: string,
     _creationTime: number
 }
-function FileList() {
 
+function FileList() {
     const { fileList_, setFileList_ } = useContext(FileListContext);
-    const [fileList, setFileList] = useState<any>();
+    const [fileList, setFileList] = useState<FILE[]>([]);
     const { user }: any = useKindeBrowserClient();
     const router = useRouter();
+
     useEffect(() => {
-        fileList_ && setFileList(fileList_);
-        console.log(fileList_);
-    }, [fileList_])
+        if (fileList_) {
+            setFileList(fileList_);
+            console.log(fileList_);
+        }
+    }, [fileList_]);
+
     return (
         <div className='mt-10'>
             <div className="overflow-x-auto">
@@ -44,9 +48,9 @@ function FileList() {
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-enm-main-text">Created At</td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-enm-main-text">Edited</td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-enm-main-text">Author</td>
+                            <td className="whitespace-nowrap px-4 py-2 font-medium text-enm-main-text">Actions</td>
                         </tr>
                     </thead>
-
                     <tbody>
                         {fileList && fileList.map((file: FILE, index: number) => (
                             <tr key={index} className="hover:bg-enm-bg-hover cursor-pointer"
@@ -78,11 +82,9 @@ function FileList() {
                                                 <Archive className='h-4 w-4' /> Archive</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
-
                                 </td>
                             </tr>
                         ))}
-
                     </tbody>
                 </table>
             </div>
@@ -90,4 +92,4 @@ function FileList() {
     )
 }
 
-export default FileList
+export default FileList;
