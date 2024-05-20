@@ -8,17 +8,15 @@ import Header from './_components/Header'
 import FileList from './_components/FileList'
 
 function Dashboard() {
-
     const convex = useConvex();
     const { user }: any = useKindeBrowserClient();
-    // const getUser = useQuery(api.user.getUser, { email: user?.email });
-
     const createUser = useMutation(api.user.createUser);
+
     useEffect(() => {
         if (user) {
-            checkUser()
+            checkUser();
         }
-    }, [user])
+    }, [user]);
 
     const checkUser = async () => {
         const result = await convex.query(api.user.getUser, { email: user?.email });
@@ -28,10 +26,10 @@ function Dashboard() {
                 email: user.email,
                 image: user.picture
             }).then((resp) => {
-                console.log(resp)
-            })
+                console.log(resp);
+            });
         }
-    }
+    };
 
     return (
         <div className='bg-enm-bg p-8 min-h-screen'>
@@ -41,4 +39,4 @@ function Dashboard() {
     )
 }
 
-export default Dashboard
+export default Dashboard;
