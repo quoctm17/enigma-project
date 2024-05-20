@@ -7,7 +7,7 @@ function Header() {
     return (
         <header className="absolute top-0 left-0 w-full text-white z-50">
             <div className="mx-auto flex h-16 max-w-screen-xl items-center px-4 sm:px-6 lg:px-8">
-                <a href='#' className='hover:text-gray-100/75'>
+                <a href='/' className='hover:text-gray-100/75'>
                     <div className='flex items-center gap-3 pl-4'>
                         <Image src='/logo.png' alt='logo'
                             width={50}
@@ -29,7 +29,7 @@ function Header() {
                             </li>
 
                             <li>
-                                <a className="text-white transition hover:text-gray-100/75" href="#"> Pricing </a>
+                                <a className="text-white transition hover:text-gray-100/75" href="/pricing"> Pricing </a>
                             </li>
 
                             <li>

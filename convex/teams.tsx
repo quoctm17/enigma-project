@@ -1,3 +1,4 @@
+// convex/teams.tsx
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
@@ -10,7 +11,6 @@ export const getTeam = query({
         const allTeams = await ctx.db.query('teams').collect();
         const result = allTeams.filter(team => team.members.includes(args.email));
         return result;
-
     },
 })
 
@@ -38,13 +38,14 @@ export const inviteUser = mutation({
         }
 
         if (team.members.includes(args.email)) {
-            throw new Error("User is already a member of the team");
+            return { success: false, message: "User is already a member of this team" };
         }
 
+        const updatedMembers = [...team.members, args.email];
         await ctx.db.patch(args.teamId, {
-            members: [...team.members, args.email],
+            members: updatedMembers,
         });
 
-        return { success: true };
+        return { success: true, message: "User invited successfully" };
     },
 });

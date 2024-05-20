@@ -75,7 +75,7 @@ function FileList() {
                                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem className='gap-3'>
-                                                <Archive className='h-4 w-4'/> Archive</DropdownMenuItem>
+                                                <Archive className='h-4 w-4' /> Archive</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
 
