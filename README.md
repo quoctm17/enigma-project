@@ -13,13 +13,13 @@ Enigma is a comprehensive web application designed for team collaboration, file 
 
 ## Technologies Used
 
-- **Next.js**: A React framework for building web applications.
-- **Convex**: Real-time state management for collaborative applications.
-- **BlockNote**: Rich text editor for document writing.
-- **Excalidraw**: Virtual whiteboard for drawing diagrams.
-- **GetStream.io**: Activity feeds and chat APIs.
-- **Lucide**: Icon library for a wide range of icons.
-- **Shadcn**: UI components for React.
+- Next.js: A React framework for building web applications.
+- Convex: Real-time state management for collaborative applications.
+- BlockNote: Rich text editor for document writing.
+- Excalidraw: Virtual whiteboard for drawing diagrams.
+- GetStream.io: Activity feeds and chat APIs.
+- Lucide: Icon library for a wide range of icons.
+- Shadcn: UI components for React.
 
 ## Getting Started
 
