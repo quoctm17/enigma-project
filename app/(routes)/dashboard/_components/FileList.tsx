@@ -26,7 +26,7 @@ export interface FILE {
 }
 
 function FileList() {
-    const { fileList_, setFileList_ } = useContext(FileListContext);
+    const { fileList_, setFileList_, userImages } = useContext(FileListContext);
     const [fileList, setFileList] = useState<FILE[]>([]);
     const { user }: any = useKindeBrowserClient();
     const router = useRouter();
@@ -63,7 +63,7 @@ function FileList() {
                                 <td className="whitespace-nowrap px-4 py-2 text-enm-main-text">
                                     {moment(file._creationTime).format('DD MMM YYYY')}</td>
                                 <td className="whitespace-nowrap px-4 py-2 text-enm-main-text">
-                                    <Image src={user?.picture}
+                                    <Image src={userImages[file.createdBy] || '/default-avatar.png'}
                                         alt='user'
                                         width={30}
                                         height={30}
@@ -79,7 +79,8 @@ function FileList() {
                                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem className='gap-3'>
-                                                <Archive className='h-4 w-4' /> Archive</DropdownMenuItem>
+                                                <Archive className='h-4 w-4' /> Archive
+                                            </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </td>

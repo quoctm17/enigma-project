@@ -21,6 +21,7 @@ export const getTeam = query({
     },
 });
 
+
 export const createTeam = mutation({
     args: { teamName: v.string(), createBy: v.string(), image: v.string() },
     handler: async (ctx, args) => {
