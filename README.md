@@ -95,7 +95,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 If you have any questions or feedback, please contact us at:
 
-- **Email**: support@enigma.com
+- **Email**: enigmaproject131@gmail.com
 - **Website**: [Enigma](https://enigma.com)
 
 ---
