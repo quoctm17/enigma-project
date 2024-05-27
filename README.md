@@ -1,17 +1,15 @@
-Here is the README file for your project "Enigma":
-
 ```markdown
 # Enigma
 
-**Enigma** is a comprehensive web application designed for team collaboration, file management, meetings, diagram drawing, and document writing. This project is developed as part of the EXE201 course at FPT University Ho Chi Minh City.
+Enigma is a comprehensive web application designed for team collaboration, file management, meetings, diagram drawing, and document writing. This project is developed as part of the EXE201 course at FPT University Ho Chi Minh City.
 
 ## Features
 
-- **Team Collaboration**: Manage teams and projects efficiently.
-- **File Management**: Upload, organize, and share files with your team.
-- **Meetings**: Schedule and manage meetings with integrated tools.
-- **Diagram Drawing**: Create and share diagrams using Excalidraw.
-- **Document Writing**: Write and collaborate on documents with BlockNote.
+- Team Collaboration: Manage teams and projects efficiently.
+- File Management: Upload, organize, and share files with your team.
+- Meetings: Schedule and manage meetings with integrated tools.
+- Diagram Drawing: Create and share diagrams using Excalidraw.
+- Document Writing: Write and collaborate on documents with BlockNote.
 
 ## Technologies Used
 
