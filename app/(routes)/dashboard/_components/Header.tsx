@@ -43,7 +43,8 @@ function Header() {
                     setActiveTeam((prevTeam: Team) => ({
                         ...prevTeam,
                         members: [...prevTeam.members, inviteEmail],
-                        roles: { ...prevTeam.roles, [inviteEmail]: 'Collaborator' }
+                        roles: { ...prevTeam.roles, [inviteEmail]: 'Collaborator' },
+                        images: { ...prevTeam.images, [inviteEmail]: user.picture } // Lưu URL ảnh mới lấy được từ backend
                     }));
                     setFileList_((prevList: FILE[]) => [...prevList]);
                     setOpenInviteDialog(false);
@@ -59,6 +60,8 @@ function Header() {
         }
     };
 
+
+
     const handleRemoveUser = async (email: string) => {
         if (email && activeTeam?._id) {
             try {
@@ -71,7 +74,8 @@ function Header() {
                     setActiveTeam((prevTeam: Team) => ({
                         ...prevTeam,
                         members: prevTeam.members.filter((member: string) => member !== email),
-                        roles: Object.fromEntries(Object.entries(prevTeam.roles).filter(([key]) => key !== email))
+                        roles: Object.fromEntries(Object.entries(prevTeam.roles).filter(([key]) => key !== email)),
+                        images: Object.fromEntries(Object.entries(prevTeam.images).filter(([key]) => key !== email))
                     }));
                     setFileList_((prevList: FILE[]) => [...prevList]);
                 } else {
@@ -90,6 +94,16 @@ function Header() {
             <div className='flex gap-2 items-center border rounded-md p-1 '>
                 <Search color='white' className='h-4 w-4' />
                 <input className='bg-transparent text-enm-main-text focus:outline-none' type='text' placeholder='Search for...' />
+            </div>
+            <div className='flex gap-2 items-center'>
+                {activeTeam?.members.filter((member: string) => member !== user?.email).slice(0, 3).map((member: string, index: number) => (
+                    <Image key={index} src={activeTeam.images[member]} alt='member' width={30} height={30} className='rounded-full' />
+                ))}
+                {activeTeam?.members.filter((member: string) => member !== user?.email).length > 3 && (
+                    <div className='flex items-center justify-center w-8 h-8 bg-gray-300 rounded-full' onClick={() => setOpenMemberDialog(true)}>
+                        <span className='text-black'>...</span>
+                    </div>
+                )}
             </div>
             <div>
                 <Image src={user?.picture} alt='user' width={30} height={30} className='rounded-full' />

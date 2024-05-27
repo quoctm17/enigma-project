@@ -31,7 +31,7 @@
         "@stream-io/video-react-sdk": "^0.5.1",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.0",
-        "convex": "^1.11.0",
+        "convex": "^1.12.0",
         "lucide-react": "^0.368.0",
         "moment": "^2.30.1",
         "next": "14.2.1",

@@ -1,4 +1,3 @@
-// app/(routes)/dashboard/_components/SideNavTopSection.tsx
 import { ChevronDown, LayoutGrid, LogOut, Settings, Users } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState, useContext } from 'react';
@@ -46,7 +45,7 @@ function SideNavTopSection({ user }: any) {
         console.log("TeamList", result);
         setTeamList(result);
         if (result.length > 0) {
-            setActiveTeam(result[0]); // Cập nhật thông tin team ngay lập tức
+            setActiveTeam(result[0]);
         }
     };
 
@@ -109,10 +108,10 @@ function SideNavTopSection({ user }: any) {
                 </PopoverContent>
             </Popover>
 
-            {/* All File Button */}
-            <Button className='w-full justify-start gap-2 font-bold mt-8 hover:border-2 hover:border-gray-400'>
+            {/* All Files Button */}
+            <Button className='w-full text-white justify-start gap-2 font-bold mt-8 flex items-center hover:border-2 hover:border-gray-400'>
                 <LayoutGrid className='h-5 w-5' />
-                All Files
+                <span>All Files</span>
             </Button>
         </div>
     );

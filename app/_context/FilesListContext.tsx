@@ -6,6 +6,7 @@ export interface Team {
     createBy: string;
     members: string[];
     roles: { [key: string]: string };
+    images: { [key: string]: string };
 }
 
 export const FileListContext = createContext<any>(undefined);
@@ -20,3 +21,4 @@ export const FileListProvider = ({ children }: { children: ReactNode }) => {
         </FileListContext.Provider>
     );
 };
+
