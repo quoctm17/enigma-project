@@ -32,25 +32,25 @@ Follow these instructions to set up and run Enigma on your local machine.
 
 ### Installation
 
-1. **Clone the repository**
+1. Clone the repository
    ```bash
    git clone https://github.com/yourusername/enigma.git
    cd enigma
    ```
 
-2. **Install Convex**
+2. Install Convex
    ```bash
    npm install convex
    ```
 
-3. **Install Next.js and other dependencies**
+3. Install Next.js and other dependencies
    ```bash
    npm install
    ```
 
 ### Running the Application
 
-1. **Start the development server**
+1. Start the development server
    ```bash
    npm run dev
    ```
