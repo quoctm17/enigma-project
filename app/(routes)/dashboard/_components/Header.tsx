@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { api } from '@/convex/_generated/api';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { useMutation } from 'convex/react';
-import { Search, Send, Trash2 } from 'lucide-react';
+import { Search, Send, UserMinus, LogOut } from 'lucide-react';
 import Image from 'next/image';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import React, { useContext, useState } from 'react';
@@ -44,7 +44,7 @@ function Header() {
                         ...prevTeam,
                         members: [...prevTeam.members, inviteEmail],
                         roles: { ...prevTeam.roles, [inviteEmail]: 'Collaborator' },
-                        images: { ...prevTeam.images, [inviteEmail]: user.picture } // Lưu URL ảnh mới lấy được từ backend
+                        images: { ...prevTeam.images, [inviteEmail]: user.picture }
                     }));
                     setFileList_((prevList: FILE[]) => [...prevList]);
                     setOpenInviteDialog(false);
@@ -59,8 +59,6 @@ function Header() {
             toast.error('Invite email or active team ID is missing');
         }
     };
-
-
 
     const handleRemoveUser = async (email: string) => {
         if (email && activeTeam?._id) {
@@ -86,6 +84,12 @@ function Header() {
             }
         } else {
             toast.error('User email or active team ID is missing');
+        }
+    };
+
+    const handleLeaveTeam = async () => {
+        if (user?.email && activeTeam?._id) {
+            await handleRemoveUser(user.email);
         }
     };
 
@@ -138,7 +142,7 @@ function Header() {
             <Dialog open={openMemberDialog} onOpenChange={setOpenMemberDialog}>
                 <DialogTrigger asChild>
                     <Button className='gap-2 flex h-8 bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-600'>
-                        <Trash2 className='h-4 w-4' /> Manage Members
+                        <UserMinus className='h-4 w-4' /> Manage Members
                     </Button>
                 </DialogTrigger>
                 <DialogContent className='bg-black'>
@@ -153,12 +157,23 @@ function Header() {
                             <div key={member} className='flex justify-between items-center py-2'>
                                 <span className='text-white'>{member}</span>
                                 {activeTeam.roles[member] !== 'Owner' && (
-                                    <Button
-                                        className='bg-red-500 hover:bg-red-600'
-                                        onClick={() => handleRemoveUser(member)}
-                                    >
-                                        Remove
-                                    </Button>
+                                    member === user.email ? (
+                                        <Button
+                                            className='bg-red-500 hover:bg-red-600'
+                                            onClick={handleLeaveTeam}
+                                        >
+                                            Leave Team
+                                        </Button>
+                                    ) : (
+                                        activeTeam.roles[user.email] === 'Owner' && (
+                                            <Button
+                                                className='bg-red-500 hover:bg-red-600'
+                                                onClick={() => handleRemoveUser(member)}
+                                            >
+                                                Remove
+                                            </Button>
+                                        )
+                                    )
                                 )}
                             </div>
                         ))}
