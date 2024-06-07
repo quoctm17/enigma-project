@@ -227,7 +227,7 @@ function Canvas({
     };
 
     return (
-        <div style={{ height: '700px' }}>
+        <div className="h-full">
             {fileData && (
                 <Excalidraw
                     excalidrawAPI={excalidrawRefCallback}
