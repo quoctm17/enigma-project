@@ -42,11 +42,11 @@ function Workspace({ params }: any) {
 
             {/* Workspace Layout */}
             <div
-                className="grid grid-cols-1
+                className="h-[calc(100vh-64px)] grid grid-cols-1
             md:grid-cols-2"
             >
                 {/* Document  */}
-                <div className="h-screen text-enm-main-text bg-enm-bg">
+                <div className=" text-enm-main-text bg-enm-bg">
                     {/* <Editor onSaveTrigger={triggerSave}
                         fileId={params.fileId}
                         fileData={fileData}
@@ -61,7 +61,7 @@ function Workspace({ params }: any) {
                     />
                 </div>
                 {/* Whiteboard/canvas */}
-                <div className="h-screen border-l">
+                <div className=" border-l bg-enm-bg">
                     <Canvas
                         onSaveTrigger={triggerSave}
                         fileId={params.fileId}

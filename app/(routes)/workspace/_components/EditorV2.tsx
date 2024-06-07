@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 import { api } from '@/convex/_generated/api';
 import { FILE } from '../../dashboard/_components/FileList';
 
+import './editor-styles.css';
+
 const rawDocument = [
     {
         type: 'heading',
@@ -97,7 +99,7 @@ function EditorV2({
     }
 
     // Renders the editor instance using a React component.
-    return <BlockNoteView editor={editor} theme={'dark'} />;
+    return <BlockNoteView editor={editor} theme={'dark'} data-theming-css-demo />;
 }
 
 export default EditorV2;

@@ -1,11 +1,11 @@
-"use client"
-import { Button } from '@/components/ui/button'
-import { api } from '@/convex/_generated/api'
-import { LogoutLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
-import { useConvex, useMutation, useQuery } from 'convex/react'
-import React, { useEffect } from 'react'
-import Header from './_components/Header'
-import FileList from './_components/FileList'
+'use client';
+import { Button } from '@/components/ui/button';
+import { api } from '@/convex/_generated/api';
+import { LogoutLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { useConvex, useMutation, useQuery } from 'convex/react';
+import React, { useEffect } from 'react';
+import Header from './_components/Header';
+import FileList from './_components/FileList';
 
 function Dashboard() {
     const convex = useConvex();
@@ -24,19 +24,23 @@ function Dashboard() {
             createUser({
                 name: user.given_name,
                 email: user.email,
-                image: user.picture
-            }).then((resp) => {
-                console.log(resp);
-            });
+                image: user.picture || '',
+            })
+                .then((resp) => {
+                    console.log(resp);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     };
 
     return (
-        <div className='bg-enm-bg p-8 min-h-screen'>
+        <div className="bg-enm-bg p-8 min-h-screen">
             <Header />
             <FileList />
         </div>
-    )
+    );
 }
 
 export default Dashboard;
