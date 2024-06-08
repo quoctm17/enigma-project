@@ -10,10 +10,27 @@ import { FILE } from '../../dashboard/_components/FileList';
 import Canvas from '../_components/Canvas';
 import EditorV2 from '../_components/EditorV2';
 
-const doc = new Y.Doc();
-
 function Workspace({ params }: any) {
-    const provider = useMemo(() => new WebrtcProvider(params.fileId, doc), []);
+    // const provider = useMemo(() => new WebrtcProvider(params.fileId, doc), []);
+
+    const [yDoc, setYDoc] = useState();
+    const [yProvider, setYProvider] = useState();
+
+    useEffect(() => {
+        const doc = new Y.Doc();
+        const provider = new WebrtcProvider(params.fileId, doc, {
+            signaling: ['wss://y-webrtc-server.onrender.com'],
+        });
+
+        setYDoc(doc as any);
+        setYProvider(provider as any);
+
+        return () => {
+            doc.destroy();
+            provider.destroy();
+        };
+    }, [params]);
+
     const userMetaData = useMemo(
         () =>
             // get random name and random color
@@ -27,6 +44,7 @@ function Workspace({ params }: any) {
     const [triggerSave, serTriggerSave] = useState(false);
     const convex = useConvex();
     const [fileData, setFileData] = useState<FILE | any>();
+
     useEffect(() => {
         console.log('FILEID', params.fileId);
         params.fileId && getFileData();
@@ -36,6 +54,7 @@ function Workspace({ params }: any) {
         const result = await convex.query(api.files.getFileById, { _id: params.fileId });
         setFileData(result);
     };
+
     return (
         <div>
             <WorkspaceHeader onSave={() => serTriggerSave(!triggerSave)} />
@@ -45,32 +64,32 @@ function Workspace({ params }: any) {
                 className="h-[calc(100vh-64px)] grid grid-cols-1
             md:grid-cols-2"
             >
-                {/* Document  */}
-                <div className=" text-enm-main-text bg-enm-bg">
-                    {/* <Editor onSaveTrigger={triggerSave}
-                        fileId={params.fileId}
-                        fileData={fileData}
-                    /> */}
-                    <EditorV2
-                        onSaveTrigger={triggerSave}
-                        fileId={params.fileId}
-                        fileData={fileData}
-                        provider={provider}
-                        doc={doc}
-                        userMetaData={userMetaData}
-                    />
-                </div>
-                {/* Whiteboard/canvas */}
-                <div className=" border-l bg-enm-bg">
-                    <Canvas
-                        onSaveTrigger={triggerSave}
-                        fileId={params.fileId}
-                        fileData={fileData}
-                        provider={provider}
-                        doc={doc}
-                        userMetaData={userMetaData}
-                    />
-                </div>
+                {yDoc && yProvider && (
+                    <>
+                        {/* Document  */}
+                        <div className=" text-enm-main-text bg-enm-bg">
+                            <EditorV2
+                                onSaveTrigger={triggerSave}
+                                fileId={params.fileId}
+                                fileData={fileData}
+                                provider={yProvider}
+                                doc={yDoc}
+                                userMetaData={userMetaData}
+                            />
+                        </div>
+                        {/* Whiteboard/canvas */}
+                        <div className=" border-l bg-enm-bg">
+                            <Canvas
+                                onSaveTrigger={triggerSave}
+                                fileId={params.fileId}
+                                fileData={fileData}
+                                provider={yProvider}
+                                doc={yDoc}
+                                userMetaData={userMetaData}
+                            />
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

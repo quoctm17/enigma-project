@@ -46,8 +46,8 @@ function Canvas({
     doc: any;
     userMetaData: any;
 }) {
-    const yMapElement = useMemo(() => doc.getMap('excalidraw-elements'), []);
-    const yMapCursor = useMemo(() => doc.getMap('excalidraw-cursors'), []);
+    const yMapElement = useMemo(() => doc?.getMap('excalidraw-elements'), []);
+    const yMapCursor = useMemo(() => doc?.getMap('excalidraw-cursors'), []);
     const collaborators = useMemo(() => {
         // TODO: get real data
         const c = new Map<string, Collaborator>();
