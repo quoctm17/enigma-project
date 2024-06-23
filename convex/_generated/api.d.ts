@@ -15,6 +15,9 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as files from "../files.js";
+import type * as order from "../order.js";
+import type * as seed from "../seed.js";
+import type * as subscriptionPlan from "../subscriptionPlan.js";
 import type * as teams from "../teams.js";
 import type * as user from "../user.js";
 
@@ -28,6 +31,9 @@ import type * as user from "../user.js";
  */
 declare const fullApi: ApiFromModules<{
   files: typeof files;
+  order: typeof order;
+  seed: typeof seed;
+  subscriptionPlan: typeof subscriptionPlan;
   teams: typeof teams;
   user: typeof user;
 }>;

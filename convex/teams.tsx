@@ -21,6 +21,16 @@ export const getTeam = query({
     },
 });
 
+export const getTeamById = query({
+    args: {
+        teamId: v.id("teams")
+    },
+    handler: async (ctx, args) => {
+        const team = await ctx.db.get(args.teamId);
+        return team;
+    },
+});
+
 
 export const createTeam = mutation({
     args: { teamName: v.string(), createBy: v.string(), image: v.string() },
@@ -100,4 +110,34 @@ export const removeUser = mutation({
 
         return { success: true, message: "User removed successfully" };
     },
+});
+
+export const getMaxFilesForTeam = query({
+    args: {
+        teamId: v.id("teams")
+    },
+    handler: async (ctx, args) => {
+        const team = await ctx.db.get(args.teamId) as Team;
+        if (!team) {
+            throw new Error("Team not found");
+        }
+
+        const user = await ctx.db.query('user')
+            .filter((q) => q.eq(q.field('email'), team.createBy))
+            .first();
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        const plan = await ctx.db.query('subscriptionPlans')
+            .filter((q) => q.eq(q.field('name'), user.currentPlan))
+            .first();
+
+        if (!plan) {
+            throw new Error("Plan not found");
+        }
+
+        return plan.maxFiles;
+    }
 });
