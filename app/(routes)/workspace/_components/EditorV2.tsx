@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 import { api } from '@/convex/_generated/api';
 import { FILE } from '../../dashboard/_components/FileList';
 
+import './editor-styles.css';
+
 const rawDocument = [
     {
         type: 'heading',
@@ -68,7 +70,7 @@ function EditorV2({
                 // The Yjs Provider responsible for transporting updates:
                 provider,
                 // Where to store BlockNote data in the Y.Doc:
-                fragment: doc.getXmlFragment('document-store'),
+                fragment: doc?.getXmlFragment('document-store'),
                 // TODO: get real user information
                 // Information (name and color) for this user:
                 user: userMetaData,
@@ -97,7 +99,7 @@ function EditorV2({
     }
 
     // Renders the editor instance using a React component.
-    return <BlockNoteView editor={editor} theme={'dark'} />;
+    return <BlockNoteView editor={editor} theme={'dark'} data-theming-css-demo />;
 }
 
 export default EditorV2;
