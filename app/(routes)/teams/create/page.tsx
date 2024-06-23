@@ -30,7 +30,10 @@ function CreateTeam() {
             console.log('Team created:', response);
             if (response) {
                 toast.success('Team created successfully!!!');
-                router.push('/dashboard');
+                // Đợi một chút để chắc chắn rằng user đã được cập nhật trước khi chuyển hướng
+                setTimeout(() => {
+                    router.push('/dashboard');
+                }, 1000);
             }
         } catch (error) {
             console.error('Error creating team:', error);

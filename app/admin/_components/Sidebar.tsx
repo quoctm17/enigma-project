@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { BadgeDollarSign, LayoutDashboard, PackageSearch, TicketPercent, UsersRound } from 'lucide-react'
+import { BadgeDollarSign, LayoutDashboard, PackageSearch, TicketPercent, UsersRound, FileText } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -32,6 +32,11 @@ const Sidebar = () => {
             label: 'Coupons',
             route: '/admin/coupons',
             icon: TicketPercent
+        },
+        {
+            label: 'Orders',
+            route: '/admin/orders',
+            icon: FileText
         }
     ];
 

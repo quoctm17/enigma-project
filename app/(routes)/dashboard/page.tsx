@@ -11,6 +11,8 @@ function Dashboard() {
     const convex = useConvex();
     const { user }: any = useKindeBrowserClient();
     const createUser = useMutation(api.user.createUser);
+    const seedOrders = useMutation(api.seed.seedOrders);
+    const seedSubscriptionPlans = useMutation(api.seed.seedSubscriptionPlans);
 
     useEffect(() => {
         if (user) {
@@ -24,13 +26,13 @@ function Dashboard() {
             createUser({
                 name: user.given_name,
                 email: user.email,
-                image: user.picture
+                image: user.picture,
+                currentPlan: 'Free'
             }).then((resp) => {
                 console.log(resp);
             });
         }
     };
-
     return (
         <div className='bg-enm-bg p-8 min-h-screen'>
             <Header />

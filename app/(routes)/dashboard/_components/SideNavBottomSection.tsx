@@ -12,10 +12,9 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from '@/components/ui/input'
-import Constant from '@/app/_constant/Constant'
 import PricingDialog from './PricingDialog'
 
-function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
+function SideNavBottomSection({ onFileCreate, totalFiles, maxFiles }: any) {
     const menuList = [
         {
             id: 1,
@@ -46,19 +45,15 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
                     {menu.name}</h2>
             ))}
 
-            {/* Add New File Button */}
             <Dialog>
                 <DialogTrigger className='w-full' asChild>
-                    {/* <Button className='w-full bg-gradient-to-r from-pink-500 to-enm-primary hover:from-pink-600 hover:to-sky-600 justify-start mt-3'>
-                        New File
-                    </Button> */}
                     <div className="w-full rounded-md bg-gradient-to-r from-pink-500 to-enm-primary p-1 mt-4 cursor-pointer">
                         <div className="flex h-full w-full bg-enm-bg-side-nav back">
                             <h1 className="text-[16px] font-bold bg-gradient-to-r from-pink-400 via-sky-400 to-sky-400 inline-block text-transparent bg-clip-text ml-4 py-2">Create New File</h1>
                         </div>
                     </div>
                 </DialogTrigger>
-                {totalFiles < Constant.MAX_FREE_FILE ?
+                {totalFiles < maxFiles ?
                     <DialogContent className='bg-enm-bg-side-nav border-none text-enm-main-text'>
                         <DialogHeader >
                             <DialogTitle>Create New File</DialogTitle>
@@ -84,22 +79,20 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
                     <PricingDialog />}
             </Dialog>
 
-            {/* Progress Bar  */}
             <div className='h-4 w-full bg-gray-200 rounded-full mt-5'>
-                <div className={`h-4  bg-enm-primary rounded-full`}
-                    style={{ width: `${(totalFiles / 5) * 100}%` }}
+                <div className={`h-4 bg-enm-primary rounded-full`}
+                    style={{ width: `${(totalFiles / maxFiles) * 100}%` }}
                 >
                 </div>
             </div>
 
             <h2 className='text-[12px] mt-3 text-enm-main-text'>
-                <strong>{totalFiles}</strong> out of <strong>{Constant.MAX_FREE_FILE}</strong> files used</h2>
+                <strong>{totalFiles}</strong> out of <strong>{maxFiles}</strong> files used</h2>
             <h2 className='text-[12px] mt-1 text-enm-main-text'>
                 <span style={{ textDecoration: 'underline' }}>Upgrade</span> your plan for unlimited access.
             </h2>
         </div>
-
     )
 }
 
-export default SideNavBottomSection
+export default SideNavBottomSection;
