@@ -1,0 +1,4 @@
+/* Makes slash menu hovered items blue */
+.bn-container[data-theming-css-demo] .bn-editor {
+    background-color: #0B0B0B;
+}
