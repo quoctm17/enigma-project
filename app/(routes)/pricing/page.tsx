@@ -52,9 +52,10 @@ export default function Pricing({ searchParams }: any) {
     const { type = 'monthly', code, id, cancel, status, orderCode } = searchParams;
 
     useEffect(() => {
+        if (!user) return;
         if (cancel === 'true' && status === 'CANCELLED') {
             updateOrderStatusByPaymentCodeAndUserEmail({
-                paymentOrderCode: orderCode,
+                paymentOrderCode: '' + orderCode,
                 userEmail: user?.email!,
                 status: 'FAILED',
             }).then(() => {
@@ -64,7 +65,7 @@ export default function Pricing({ searchParams }: any) {
             switch (status) {
                 case 'PAID':
                     updateOrderStatusByPaymentCodeAndUserEmail({
-                        paymentOrderCode: orderCode,
+                        paymentOrderCode: '' + orderCode,
                         userEmail: user?.email!,
                         status: 'PAID',
                     }).then(() => {
@@ -79,7 +80,7 @@ export default function Pricing({ searchParams }: any) {
                     break;
             }
         }
-    }, []);
+    }, [user]);
 
     // Get a new searchParams string by merging the current
     // searchParams with a provided key/value pair
@@ -100,6 +101,7 @@ export default function Pricing({ searchParams }: any) {
 
         const orderIdCode = v4();
         const paymentOrderCode = Number(String(new Date().getTime()).slice(-6));
+        console.log(paymentOrderCode);
         await createOrder({
             orderCode: orderIdCode,
             userEmail: user?.email || '',
