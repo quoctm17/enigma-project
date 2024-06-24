@@ -34,11 +34,13 @@ export default function Home() {
             const resultPlans = await seedSubscriptionPlans();
             console.log(resultPlans);
 
+            const resultUsers = await seedUsers();
+            console.log(resultUsers);
+
             const resultOrders = await seedOrders();
             console.log(resultOrders);
 
-            const resultUsers = await seedUsers();
-            console.log(resultUsers);
+
         } catch (error) {
             console.error('Seeding error:', error);
         }

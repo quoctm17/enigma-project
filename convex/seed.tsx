@@ -25,41 +25,51 @@ export const seedOrders = mutation({
     handler: async (ctx) => {
         const existingOrders = await ctx.db.query('orders').first();
         if (!existingOrders) {
-            const orders = [
+            const ordersData = [
                 {
                     orderCode: '1',
-                    amount: 5000,
                     userEmail: 'choppervipkute52@gmail.com',
                     status: 'PAID',
                     description: 'Subscription payment',
                     planName: 'Monthly',
-                    expirationDate: '2024-07-01',
                     paymentOrderCode: 'PAY123',
                 },
                 {
                     orderCode: '2',
-                    amount: 10000,
-                    userEmail: 'choppervipkute52@gmail.com',
+                    userEmail: 'userone@example.com',
                     status: 'PENDING',
                     description: 'Subscription payment',
                     planName: 'Semi-annual',
-                    expirationDate: '2024-12-01',
                     paymentOrderCode: 'PAY456',
                 },
                 {
                     orderCode: '3',
-                    amount: 15000,
-                    userEmail: 'choppervipkute52@gmail.com',
+                    userEmail: 'usertwo@example.com',
                     status: 'FAILED',
                     description: 'Subscription payment',
                     planName: 'Annual',
-                    expirationDate: '2025-07-01',
                     paymentOrderCode: 'PAY789',
                 },
             ];
 
-            for (const order of orders) {
-                await ctx.db.insert('orders', order);
+            for (const order of ordersData) {
+                const plan = await ctx.db.query('subscriptionPlans')
+                    .filter(q => q.eq(q.field('name'), order.planName))
+                    .first();
+                if (!plan) throw new Error('Plan not found');
+
+                let expirationDate = '';
+                if (plan.durationDays > 0) {
+                    const date = new Date();
+                    date.setDate(date.getDate() + plan.durationDays);
+                    expirationDate = date.toISOString().split('T')[0];
+                }
+
+                await ctx.db.insert('orders', {
+                    ...order,
+                    amount: plan.price,
+                    expirationDate,
+                });
             }
             return { success: true, message: 'Seeding completed' };
         } else {
@@ -74,6 +84,12 @@ export const seedUsers = mutation({
         if (!existingUsers) {
             const users = [
                 {
+                    name: 'Quốc',
+                    email: 'choppervipkute52@gmail.com',
+                    image: 'https://example.com/image1.jpg',
+                    currentPlan: 'Monthly'
+                },
+                {
                     name: 'User One',
                     email: 'userone@example.com',
                     image: 'https://example.com/image1.jpg',
@@ -83,7 +99,7 @@ export const seedUsers = mutation({
                     name: 'User Two',
                     email: 'usertwo@example.com',
                     image: 'https://example.com/image2.jpg',
-                    currentPlan: 'Monthly'
+                    currentPlan: 'Annual'
                 },
 
             ];

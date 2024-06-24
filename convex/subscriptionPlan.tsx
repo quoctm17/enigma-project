@@ -20,3 +20,48 @@ export const createSubscriptionPlan = mutation({
         return result;
     },
 });
+
+export const getMaxFilesByName = query({
+    args: {
+        name: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const plan = await ctx.db.query('subscriptionPlans')
+            .filter(q => q.eq(q.field('name'), args.name))
+            .first();
+        if (!plan) {
+            throw new Error('Plan not found');
+        }
+        return plan.maxFiles;
+    },
+});
+
+export const getPriceByName = query({
+    args: {
+        name: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const plan = await ctx.db.query('subscriptionPlans')
+            .filter(q => q.eq(q.field('name'), args.name))
+            .first();
+        if (!plan) {
+            throw new Error('Plan not found');
+        }
+        return plan.price;
+    },
+});
+
+export const getDurationDaysByName = query({
+    args: {
+        name: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const plan = await ctx.db.query('subscriptionPlans')
+            .filter(q => q.eq(q.field('name'), args.name))
+            .first();
+        if (!plan) {
+            throw new Error('Plan not found');
+        }
+        return plan.durationDays;
+    },
+});

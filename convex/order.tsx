@@ -4,20 +4,53 @@ import { mutation, query } from './_generated/server';
 export const createOrder = mutation({
     args: {
         orderCode: v.string(),
-        amount: v.number(),
         userEmail: v.string(),
         status: v.string(),
         description: v.string(),
         planName: v.string(),
-        expirationDate: v.string(),
+        expirationDate: v.optional(v.string()),
         paymentOrderCode: v.string(),
     },
     handler: async (ctx, args) => {
-        const result = await ctx.db.insert('orders', args);
+        // Check for existing pending or paid orders
+        const existingOrders = await ctx.db.query('orders')
+            .filter(q => q.eq(q.field('userEmail'), args.userEmail))
+            .filter(q => q.or(
+                q.eq(q.field('status'), 'PENDING'),
+                q.and(
+                    q.eq(q.field('status'), 'PAID'),
+                    q.gte(q.field('expirationDate'), new Date().toISOString().split('T')[0])
+                )
+            ))
+            .collect();
+
+        if (existingOrders.length > 0) {
+            throw new Error('User already has pending or active paid orders.');
+        }
+
+        // Get plan info
+        const plan = await ctx.db.query('subscriptionPlans')
+            .filter(q => q.eq(q.field('name'), args.planName))
+            .first();
+        if (!plan) throw new Error('Plan not found');
+
+        // Calculate expiration date
+        let expirationDate = '';
+        if (plan.durationDays > 0) {
+            const date = new Date();
+            date.setDate(date.getDate() + plan.durationDays);
+            expirationDate = date.toISOString().split('T')[0];
+        }
+
+        // Insert new order
+        const result = await ctx.db.insert('orders', {
+            ...args,
+            amount: plan.price,
+            expirationDate
+        });
         return result;
     },
 });
-
 export const getOrderByCode = query({
     args: {
         orderCode: v.string(),
@@ -52,9 +85,25 @@ export const updateOrderStatus = mutation({
         const result = await ctx.db.query('orders')
             .filter(q => q.eq(q.field('orderCode'), args.orderCode))
             .first();
-        if (result) {
-            await ctx.db.patch(result._id, { status: args.status });
+        if (!result) {
+            throw new Error('Order not found');
         }
+
+        // Update order status
+        await ctx.db.patch(result._id, { status: args.status });
+
+        // If the order is being marked as PAID, update the user's current plan
+        if (args.status === 'PAID') {
+            const user = await ctx.db.query('user')
+                .filter(q => q.eq(q.field('email'), result.userEmail))
+                .first();
+            if (!user) {
+                throw new Error('User not found');
+            }
+
+            await ctx.db.patch(user._id, { currentPlan: result.planName });
+        }
+
         return result;
     },
 });
