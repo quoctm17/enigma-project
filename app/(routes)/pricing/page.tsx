@@ -5,6 +5,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { twMerge } from 'tailwind-merge';
 import { toast } from 'sonner';
+import { v4 } from 'uuid';
 import {
     CircleCheck,
     MoveRight,
@@ -29,9 +30,15 @@ import {
 
 import Header from '@/app/_components/Header';
 import { createPaymentLink } from './_actions';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 export default function Pricing({ searchParams }: any) {
     const { user } = useKindeBrowserClient();
+    const createOrder = useMutation(api.order.createOrder);
+    const updateOrderStatusByPaymentCodeAndUserEmail = useMutation(
+        api.order.updateOrderStatusByPaymentCodeAndUserEmail,
+    );
 
     const pathname = usePathname();
     const router = useRouter();
@@ -46,12 +53,23 @@ export default function Pricing({ searchParams }: any) {
 
     useEffect(() => {
         if (cancel === 'true' && status === 'CANCELLED') {
-            setTimeout(() => toast.error('Payment Cancelled'));
+            updateOrderStatusByPaymentCodeAndUserEmail({
+                paymentOrderCode: orderCode,
+                userEmail: user?.email!,
+                status: 'FAILED',
+            }).then(() => {
+                setTimeout(() => toast.error('Payment Cancelled'));
+            });
         } else if (cancel === 'false') {
             switch (status) {
                 case 'PAID':
-                    // TODO: change user subscription
-                    setTimeout(() => toast.success('Payment Successful'));
+                    updateOrderStatusByPaymentCodeAndUserEmail({
+                        paymentOrderCode: orderCode,
+                        userEmail: user?.email!,
+                        status: 'PAID',
+                    }).then(() => {
+                        setTimeout(() => toast.success('Payment Successful'));
+                    });
                     break;
                 case 'PENDING':
                     break;
@@ -76,19 +94,34 @@ export default function Pricing({ searchParams }: any) {
         [searchParams],
     );
 
-    const handleClickStart = () => {
-        // TODO: check user login
+    const handleClickStart = async () => {
+        // check user login
         if (!user) router.push('/login');
-        // TODO: check user current subscription
+
+        const orderIdCode = v4();
+        const paymentOrderCode = Number(String(new Date().getTime()).slice(-6));
+        await createOrder({
+            orderCode: orderIdCode,
+            userEmail: user?.email || '',
+            description: 'Professional Plan',
+            paymentOrderCode: paymentOrderCode.toString(),
+            planName: 'Monthly',
+            status: 'PENDING',
+        });
 
         // create link
-        createPaymentLinkHandle(redirectPaymentLink, setRedirectLoading);
+        createPaymentLinkHandle(redirectPaymentLink, setRedirectLoading, paymentOrderCode);
     };
 
-    const createPaymentLinkHandle = async function (callbackFunction: (data: any) => void, setLoading: any) {
+    const createPaymentLinkHandle = async function (
+        callbackFunction: (data: any) => void,
+        setLoading: any,
+        paymentOrderCode: number,
+    ) {
         setLoading(true);
         try {
             const body = {
+                orderCode: paymentOrderCode,
                 description: `Professional Plan`, //max 25 chars
                 amount: 5000, //TODO: get package price
                 returnUrl: RETURN_URL,
