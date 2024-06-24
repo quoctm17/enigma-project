@@ -92,16 +92,21 @@ export const updateOrderStatus = mutation({
         // Update order status
         await ctx.db.patch(result._id, { status: args.status });
 
+        const user = await ctx.db.query('user')
+            .filter(q => q.eq(q.field('email'), result.userEmail))
+            .first();
+        if (!user) {
+            throw new Error('User not found');
+        }
+
         // If the order is being marked as PAID, update the user's current plan
         if (args.status === 'PAID') {
-            const user = await ctx.db.query('user')
-                .filter(q => q.eq(q.field('email'), result.userEmail))
-                .first();
-            if (!user) {
-                throw new Error('User not found');
-            }
-
             await ctx.db.patch(user._id, { currentPlan: result.planName });
+        }
+
+        // If the order is being marked as EXPIRED, update the user's current plan to FREE
+        if (args.status === 'EXPIRED') {
+            await ctx.db.patch(user._id, { currentPlan: 'Free' });
         }
 
         return result;
