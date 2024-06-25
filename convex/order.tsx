@@ -121,16 +121,14 @@ export const updateOrderStatus = mutation({
     },
 });
 
-export const updateOrderStatusByPaymentCodeAndUserEmail = mutation({
+export const updateOrderStatusByPaymentCode = mutation({
     args: {
-        userEmail: v.string(),
         paymentOrderCode: v.string(),
         status: v.string(),
     },
     handler: async (ctx, args) => {
         const result = await ctx.db
             .query('orders')
-            .filter((q) => q.eq(q.field('userEmail'), args.userEmail))
             .filter((q) => q.eq(q.field('paymentOrderCode'), args.paymentOrderCode))
             .first();
         if (!result) {
