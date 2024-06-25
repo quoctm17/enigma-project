@@ -1,5 +1,5 @@
 'use client';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import React, { useCallback, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -33,7 +33,7 @@ import { createPaymentLink } from './_actions';
 import { useConvex, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 
-export default function Pricing({ searchParams }: any) {
+export default function Pricing() {
     const [plans, setPlans] = useState<any[]>([]);
     const { user } = useKindeBrowserClient();
     const convex = useConvex();
@@ -42,6 +42,7 @@ export default function Pricing({ searchParams }: any) {
 
     const pathname = usePathname();
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     const [redirectLoading, setRedirectLoading] = useState(false);
 
@@ -49,7 +50,12 @@ export default function Pricing({ searchParams }: any) {
     const RETURN_URL = `${process.env.NEXT_PUBLIC_ENM_CLIENT_URL}${pathname}` || '';
     const CANCEL_URL = `${process.env.NEXT_PUBLIC_ENM_CLIENT_URL}${pathname}` || '';
 
-    const { type = 'monthly', code, id, cancel, status, orderCode } = searchParams;
+    const type = searchParams.get('type') || 'monthly';
+    const code = searchParams.get('code');
+    const id = searchParams.get('id');
+    const cancel = searchParams.get('cancel');
+    const status = searchParams.get('status');
+    const orderCode = searchParams.get('orderCode');
     const currentPlan = plans.find((plan) => plan.name.toUpperCase() === type?.toUpperCase());
 
     useEffect(() => {
