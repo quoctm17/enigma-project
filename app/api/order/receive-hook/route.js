@@ -46,14 +46,18 @@ import { api } from '@/convex/_generated/api';
 
 // NEXT POST request
 export async function POST(request) {
-    const body = await request.json();
-    const webhookData = payOS.verifyPaymentWebhookData(body);
-    console.log(webhookData);
+    try {
+        const body = await request.json();
+        const webhookData = payOS.verifyPaymentWebhookData(body);
+        console.log(webhookData);
 
-    await fetchMutation(api.order.updateOrderStatusByPaymentCode, {
-        paymentOrderCode: '' + webhookData.orderCode,
-        status: 'PAID',
-    });
+        await fetchMutation(api.order.updateOrderStatusByPaymentCode, {
+            paymentOrderCode: '' + webhookData.orderCode,
+            status: 'PAID',
+        });
+    } catch (error) {
+        console.log(error);
+    }
 
     return new Response();
 }
