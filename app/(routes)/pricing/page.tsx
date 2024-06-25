@@ -5,6 +5,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { twMerge } from 'tailwind-merge';
 import { toast } from 'sonner';
+import { v4 } from 'uuid';
 import {
     CircleCheck,
     MoveRight,
@@ -29,9 +30,15 @@ import {
 
 import Header from '@/app/_components/Header';
 import { createPaymentLink } from './_actions';
+import { useConvex, useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 export default function Pricing({ searchParams }: any) {
+    const [plans, setPlans] = useState<any[]>([]);
     const { user } = useKindeBrowserClient();
+    const convex = useConvex();
+    const createOrder = useMutation(api.order.createOrder);
+    const updateOrderStatusByPaymentCode = useMutation(api.order.updateOrderStatusByPaymentCode);
 
     const pathname = usePathname();
     const router = useRouter();
@@ -43,14 +50,30 @@ export default function Pricing({ searchParams }: any) {
     const CANCEL_URL = `${process.env.NEXT_PUBLIC_ENM_CLIENT_URL}${pathname}` || '';
 
     const { type = 'monthly', code, id, cancel, status, orderCode } = searchParams;
+    const currentPlan = plans.find((plan) => plan.name.toUpperCase() === type?.toUpperCase());
 
     useEffect(() => {
+        const fetchPlans = async () => {
+            // Get plan info
+            const planList = await convex.query(api.subscriptionPlan.getSubscriptionPlans);
+            setPlans(planList);
+        };
+
+        fetchPlans();
+    }, []);
+
+    useEffect(() => {
+        if (!user) return;
         if (cancel === 'true' && status === 'CANCELLED') {
-            setTimeout(() => toast.error('Payment Cancelled'));
+            updateOrderStatusByPaymentCode({
+                paymentOrderCode: '' + orderCode,
+                status: 'FAILED',
+            }).then(() => {
+                setTimeout(() => toast.error('Payment Cancelled'));
+            });
         } else if (cancel === 'false') {
             switch (status) {
                 case 'PAID':
-                    // TODO: change user subscription
                     setTimeout(() => toast.success('Payment Successful'));
                     break;
                 case 'PENDING':
@@ -61,7 +84,7 @@ export default function Pricing({ searchParams }: any) {
                     break;
             }
         }
-    }, []);
+    }, [user]);
 
     // Get a new searchParams string by merging the current
     // searchParams with a provided key/value pair
@@ -76,23 +99,40 @@ export default function Pricing({ searchParams }: any) {
         [searchParams],
     );
 
-    const handleClickStart = () => {
-        // TODO: check user login
+    const handleClickStart = async () => {
+        // check user login
         if (!user) router.push('/login');
-        // TODO: check user current subscription
+
+        const orderIdCode = v4();
+        const paymentOrderCode = Number(String(new Date().getTime()).slice(-9));
+        console.log(paymentOrderCode);
+        await createOrder({
+            orderCode: orderIdCode,
+            userEmail: user?.email || '',
+            description: 'Professional Plan',
+            paymentOrderCode: paymentOrderCode.toString(),
+            planName: 'Monthly',
+            status: 'PENDING',
+        });
 
         // create link
-        createPaymentLinkHandle(redirectPaymentLink, setRedirectLoading);
+        createPaymentLinkHandle(redirectPaymentLink, setRedirectLoading, paymentOrderCode);
     };
 
-    const createPaymentLinkHandle = async function (callbackFunction: (data: any) => void, setLoading: any) {
+    const createPaymentLinkHandle = async function (
+        callbackFunction: (data: any) => void,
+        setLoading: any,
+        paymentOrderCode: number,
+    ) {
         setLoading(true);
         try {
             const body = {
+                orderCode: paymentOrderCode,
                 description: `Professional Plan`, //max 25 chars
-                amount: 5000, //TODO: get package price
+                amount: currentPlan?.price || 5000,
                 returnUrl: RETURN_URL,
                 cancelUrl: CANCEL_URL,
+                buyerEmail: user?.email!,
             };
             let response = await createPaymentLink(body);
             if (response.error != 0) throw new Error('Call Api failed: ');
@@ -145,22 +185,22 @@ export default function Pricing({ searchParams }: any) {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    router.push(pathname + '?' + createQueryString('type', 'semiannually'));
+                                    router.push(pathname + '?' + createQueryString('type', 'semi-annual'));
                                 }}
                                 className={twMerge(
                                     'flex-1 py-6 rounded-full text-lg bg-transparent hover:bg-enm-primary/50 text-black',
-                                    type === 'semiannually' && 'bg-enm-primary text-white',
+                                    type === 'semi-annual' && 'bg-enm-primary text-white',
                                 )}
                             >
                                 Semiannually
                             </Button>
                             <Button
                                 onClick={() => {
-                                    router.push(pathname + '?' + createQueryString('type', 'yearly'));
+                                    router.push(pathname + '?' + createQueryString('type', 'annual'));
                                 }}
                                 className={twMerge(
                                     'flex-1 py-6 rounded-full text-lg bg-transparent hover:bg-enm-primary/50 text-black',
-                                    type === 'yearly' && 'bg-enm-primary text-white',
+                                    type === 'annual' && 'bg-enm-primary text-white',
                                 )}
                             >
                                 Yearly
@@ -211,8 +251,13 @@ export default function Pricing({ searchParams }: any) {
                             </p>
                             <h2 className="text-4xl font-semibold">Professional</h2>
                             <div>
-                                <span className="text-4xl font-semibold">$6.59</span>
-                                <span className="text-enm-secondary-text ml-2">/month</span>
+                                <span className="text-4xl font-semibold">
+                                    {currentPlan?.price.toLocaleString({
+                                        style: 'currency',
+                                        currency: 'VND',
+                                    })}
+                                </span>
+                                <span className="text-enm-secondary-text ml-2">/{currentPlan?.durationDays} days</span>
                             </div>
                             <Button
                                 onClick={handleClickStart}

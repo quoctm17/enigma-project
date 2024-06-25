@@ -1,20 +1,11 @@
 'use server';
 
 import { payOS } from '@/lib/payos';
+import { CheckoutRequestType } from '@payos/node/lib/type';
 
-export async function createPaymentLink(formData: any) {
-    const { description, returnUrl, cancelUrl, amount } = formData;
-    const body = {
-        orderCode: Number(String(new Date().getTime()).slice(-6)),
-        amount,
-        description,
-        cancelUrl,
-        returnUrl,
-    };
-
+export async function createPaymentLink(formData: CheckoutRequestType) {
     try {
-        const paymentLinkRes = await payOS.createPaymentLink(body);
-        console.log(body.cancelUrl);
+        const paymentLinkRes = await payOS.createPaymentLink(formData);
         return {
             error: 0,
             message: 'Success',
@@ -27,6 +18,7 @@ export async function createPaymentLink(formData: any) {
                 description: paymentLinkRes.description,
                 orderCode: paymentLinkRes.orderCode,
                 qrCode: paymentLinkRes.qrCode,
+                buyerEmail: formData.buyerEmail,
             },
         };
     } catch (error) {
