@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Header from './_components/Header';
@@ -21,13 +21,12 @@ export default function Home() {
     const seedUsers = useMutation(api.seed.seedUsers);
 
     useEffect(() => {
-        console.log("--", user)
-    }, [user])
+        console.log('--', user);
+    }, [user]);
 
     useEffect(() => {
         runSeeding();
     }, []);
-
 
     const runSeeding = async () => {
         try {
@@ -39,8 +38,6 @@ export default function Home() {
 
             const resultOrders = await seedOrders();
             console.log(resultOrders);
-
-
         } catch (error) {
             console.error('Seeding error:', error);
         }
@@ -55,7 +52,6 @@ export default function Home() {
             <ForDevelopers></ForDevelopers>
             <Workflow></Workflow>
             <Footer></Footer>
-
         </div>
     );
 }
