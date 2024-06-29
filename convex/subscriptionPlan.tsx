@@ -21,6 +21,24 @@ export const createSubscriptionPlan = mutation({
     },
 });
 
+export const updateSubscriptionPlan = mutation({
+    args: {
+        id: v.id('subscriptionPlans'),
+        name: v.string(),
+        price: v.number(),
+        durationDays: v.number(),
+        maxFiles: v.number(),
+    },
+    handler: async (ctx, args) => {
+        return await ctx.db.patch(args.id, {
+            name: args.name,
+            price: args.price,
+            durationDays: args.durationDays,
+            maxFiles: args.maxFiles,
+        });
+    },
+});
+
 export const getMaxFilesByName = query({
     args: {
         name: v.string(),

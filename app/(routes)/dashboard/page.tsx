@@ -27,15 +27,14 @@ function Dashboard() {
                 name: user.given_name,
                 email: user.email,
                 image: user.picture,
-                currentPlan: 'Free'
-            }).then((resp) => {
-                console.log(resp);
-            });
-
+                currentPlan: 'Free',
+            })
+                .then((resp) => {
+                    console.log(resp);
+                })
                 .catch((err) => {
                     console.log(err);
                 });
-
         }
     };
     return (
