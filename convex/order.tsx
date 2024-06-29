@@ -82,6 +82,13 @@ export const getOrdersByUserEmail = query({
     },
 });
 
+export const getAllOrders = query({
+    handler: async (ctx) => {
+        const result = await ctx.db.query('orders').order('desc').collect();
+        return result;
+    },
+});
+
 export const updateOrderStatus = mutation({
     args: {
         orderCode: v.string(),
@@ -141,6 +148,45 @@ export const updateOrderStatusByPaymentCode = mutation({
         const user = await ctx.db
             .query('user')
             .filter((q) => q.eq(q.field('email'), result.userEmail))
+            .first();
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // If the order is being marked as PAID, update the user's current plan
+        if (args.status === 'PAID') {
+            await ctx.db.patch(user._id, { currentPlan: result.planName });
+        }
+
+        // If the order is being marked as EXPIRED, update the user's current plan to FREE
+        if (args.status === 'EXPIRED') {
+            await ctx.db.patch(user._id, { currentPlan: 'Free' });
+        }
+
+        return result;
+    },
+});
+
+export const updateOrderStatusByEmailAndPaymentCode = mutation({
+    args: {
+        userEmail: v.string(),
+        paymentOrderCode: v.string(),
+        status: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const result = await ctx.db.query('orders')
+            .filter(q => q.eq(q.field('userEmail'), args.userEmail))
+            .filter(q => q.eq(q.field('paymentOrderCode'), args.paymentOrderCode))
+            .first();
+        if (!result) {
+            throw new Error('Order not found');
+        }
+
+        // Update order status
+        await ctx.db.patch(result._id, { status: args.status });
+
+        const user = await ctx.db.query('user')
+            .filter(q => q.eq(q.field('email'), result.userEmail))
             .first();
         if (!user) {
             throw new Error('User not found');

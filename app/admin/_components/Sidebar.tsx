@@ -14,23 +14,23 @@ const Sidebar = () => {
             icon: LayoutDashboard
         },
         {
-            label: 'Products',
-            route: '/admin/products',
+            label: 'Teams',
+            route: '/admin/teams',
             icon: PackageSearch
         },
         {
-            label: 'Customers',
-            route: '/admin/customers',
+            label: 'Users',
+            route: '/admin/users',
             icon: UsersRound
         },
         {
-            label: 'Sales',
-            route: '/admin/sales',
+            label: 'Files',
+            route: '/admin/files',
             icon: BadgeDollarSign
         },
         {
-            label: 'Coupons',
-            route: '/admin/coupons',
+            label: 'Subscription Plans',
+            route: '/admin/subscriptionPlans',
             icon: TicketPercent
         },
         {

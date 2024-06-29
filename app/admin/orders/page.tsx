@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Modal } from '@/components/ui/modal';
 import { Select, SelectContent, SelectTrigger, SelectItem } from '@/components/ui/select';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 interface Order {
     orderCode: string;
@@ -28,7 +27,6 @@ interface Plan {
 
 function OrdersPage() {
     const convex = useConvex();
-    const { user }: any = useKindeBrowserClient();
     const statuses = ["PAYING", "PENDING", "PAID", "CANCELED", "FAILED"];
 
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -36,7 +34,7 @@ function OrdersPage() {
     const [newOrder, setNewOrder] = useState<Order>({
         orderCode: '',
         amount: 0,
-        userEmail: user?.email || '',
+        userEmail: '',
         status: '',
         description: '',
         planName: '',
@@ -45,7 +43,7 @@ function OrdersPage() {
     });
     const [plans, setPlans] = useState<Plan[]>([]);
 
-    const orders = useQuery(api.order.getOrdersByUserEmail, { userEmail: user?.email }) as Order[] | undefined;
+    const orders = useQuery(api.order.getAllOrders) as Order[] | undefined;
     const subscriptionPlans = useQuery(api.subscriptionPlan.getSubscriptionPlans) as Plan[] | undefined;
     const createOrder = useMutation(api.order.createOrder);
     const updateOrderStatus = useMutation(api.order.updateOrderStatus);
@@ -57,21 +55,12 @@ function OrdersPage() {
         }
     }, [subscriptionPlans]);
 
-    useEffect(() => {
-        if (user?.email) {
-            setNewOrder((prevOrder) => ({
-                ...prevOrder,
-                userEmail: user.email
-            }));
-        }
-    }, [user?.email]);
-
     const handleCreateOrder = async () => {
         await createOrder(newOrder);
         setNewOrder({
             orderCode: '',
             amount: 0,
-            userEmail: user?.email || '',
+            userEmail: '',
             status: '',
             description: '',
             planName: '',
@@ -135,8 +124,8 @@ function OrdersPage() {
                         type="text"
                         placeholder="User Email"
                         value={newOrder.userEmail}
+                        onChange={e => setNewOrder({ ...newOrder, userEmail: e.target.value })}
                         className="bg-gray-700 text-white placeholder-gray-400"
-                        readOnly
                     />
                     <div className="bg-gray-700 text-white placeholder-gray-400">
                         <label className="block text-sm font-medium text-gray-400">Status</label>

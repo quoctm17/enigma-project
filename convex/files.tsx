@@ -1,20 +1,6 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 
-// export const createFile = mutation({
-//     args: {
-//         fileName: v.string(),
-//         teamId: v.string(),
-//         createdBy: v.string(),
-//         archive: v.boolean(),
-//         document: v.string(),
-//         whiteboard: v.string()
-//     },
-//     handler: async (ctx, args) => {
-//         const result = await ctx.db.insert('files', args);
-//         return result;
-//     },
-// })
 export const createFile = mutation({
     args: {
         fileName: v.string(),
@@ -70,7 +56,15 @@ export const getFiles = query({
 
         return result;
     },
-})
+});
+
+export const getAllFiles = query({
+    handler: async (ctx) => {
+        const result = ctx.db.query('files').order('desc').collect();
+        return result;
+    },
+});
+
 
 export const updateDocument = mutation({
     args: {
@@ -81,7 +75,7 @@ export const updateDocument = mutation({
         const result = await ctx.db.patch(args._id, { document: args.document });
         return result;
     },
-})
+});
 
 export const updateWhiteboard = mutation({
     args: {
@@ -92,7 +86,7 @@ export const updateWhiteboard = mutation({
         const result = await ctx.db.patch(args._id, { whiteboard: args.whiteboard });
         return result;
     },
-})
+});
 
 
 

@@ -21,6 +21,13 @@ export const getTeam = query({
     },
 });
 
+export const getAllTeams = query({
+    handler: async (ctx) => {
+        const teams = await ctx.db.query('teams').collect();
+        return teams;
+    },
+});
+
 export const getTeamById = query({
     args: {
         teamId: v.id("teams")
